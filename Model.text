@@ -1,0 +1,56 @@
+Status: Active | InActive
+Name : requried
+Lastname : required
+username : requried
+Email : requried
+Mobile : requried
+Start_of_business : requried
+End_of_business : reqrured
+Department : select from drop down | user can be to multiple department
+IsAdminitrator : Yes or No
+
+
+
+// Task Model
+// short_description
+// Summary
+// Priority : | critical | High | Medium | Low
+// Assign_to : User | drop down from users
+// Assign_to : Department | drop down from users
+// Nofity_Email
+// Nofity_SMS
+start_date_time
+end_date_time
+End_after | after this time its should finish
+
+is_task_done
+is_task_postponsed_next_day
+task_renew_to_next_day
+
+// Monday | checklist
+// Tuesday | 
+// Wednesday
+// Thudesday
+// Friday
+// Saturday
+// sunday
+
+
+// Validation Model
+// create 5 validation table and link them with id
+// Attachment
+// Minimum_charachter
+// Minumum_word
+// Yes_NO
+// Number
+
+
+
+
+
+
+// department table 
+// Department_Name
+// Email
+// Start_of_business
+// End_of_business
