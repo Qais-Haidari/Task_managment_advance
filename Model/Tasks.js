@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 let Task = new mongoose.Schema({
   ID: {
-    type: Number,
+    type: String,
     required: true,
   },
 
@@ -22,22 +22,20 @@ let Task = new mongoose.Schema({
     required: true,
   },
 
-  start_date: {
+  start_date_time: {
     type: String,
     required: false,
   },
 
-  end_date: {
+  end_date_time: {
     type: String,
     required: false,
   },
-
-  start_time: {
-    type: String,
-    required: false,
-  },
-
   end_time: {
+    type: String,
+    required: false,
+  },
+  start_time: {
     type: String,
     required: false,
   },
@@ -89,7 +87,7 @@ let Task = new mongoose.Schema({
   is_task_rollovered: {
     type: Boolean,
     required: false,
-    default: true,
+    default: false,
   },
 
   Task_Date: {

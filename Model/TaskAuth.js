@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 let TaskAuth = new mongoose.Schema({
   ID: {
-    type: Number,
+    type: String,
     required: true,
   },
   Task_ID: {
-    type: Number,
+    type: String,
     required: true,
   },
   Type: {
@@ -43,6 +43,10 @@ let TaskAuth = new mongoose.Schema({
     type: String,
     required: false,
     default: "",
+  },
+  Date: {
+    type: String,
+    required: true,
   },
   isAdminApproved: {
     type: String,
@@ -82,6 +86,11 @@ let TaskAuth = new mongoose.Schema({
   ActionedBy: {
     type: String,
     required: false,
+  },
+  Approve: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 

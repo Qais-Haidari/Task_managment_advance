@@ -52,12 +52,19 @@ Router.post("/AuthUpdateFeedback/:id", (req, res) => {
 });
 
 // Approve Task
-Router.post("/AuthUpdateApprove/:id", (req, res) => {
+Router.post("/AuthUpdateApprove/:id/:taskid", async (req, res) => {
+  const count = await TaskAuth.find({
+    Approve: false,
+  }).countDocuments();
+  if (count === 1) {
+    Task.findOneAndUpdate({ ID: req.params.taskid }, { is_task_done: true });
+  }
   TaskAuth.findOneAndUpdate(
     { ID: req.params.id },
     {
       isUserSubmit: "Yes",
       isAdminApproved: "Yes",
+      Approve: true,
     }
   )
     .then((r) => res.send(r))
@@ -128,13 +135,19 @@ Router.post("/BuldUpdate", async (req, res) => {
 });
 
 // Rollover
-Router.post("/rollover/:id", (req, res) => {
+Router.post("/rollover/:id/:time", async (req, res) => {
+  const newDate = req.params.time.split(" ")[0];
+  const newTime = await Task.findOne({ ID: req.params.id }).select(
+    "start_date_time"
+  );
   Task.findOneAndUpdate(
     {
       ID: req.params.id,
     },
     {
       is_task_rollovered: true,
+      start_date_time: newDate + " " + newTime.start_date_time.split(" ")[1],
+      end_date_time: newDate + " " + newTime.start_date_time.split(" ")[1],
     }
   )
     .then((r) => res.send(r))

@@ -8,6 +8,8 @@ const PORT = 5000;
 const morgan = require("morgan");
 const jwt = require("jsonwebtoken");
 const hpp = require("hpp");
+const multer = require("multer");
+const TaskAuth = require("./Model/TaskAuth");
 
 // MIDDLE WARES
 App.use(Express.json());
@@ -31,6 +33,33 @@ App.use("/", require("./Routes/Get"));
 // App.use("/", require("./Routes/DELETE"));
 App.use("/", require("./Routes/Post"));
 App.use("/", require("./Routes/Update"));
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./client/src/Image");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
+App.post(
+  "/image/:id/:taskid/:filename/:date/:ActionedBy",
+  upload.single("file"),
+  function (req, res) {
+    TaskAuth.findOneAndUpdate(
+      { ID: req.params.id, Task_ID: req.params.taskid },
+      {
+        isUserSubmit: "Yes",
+        Date: req.params.date,
+        ActionedBy: req.params.ActionedBy,
+        AttachmentPath: req.params.filename,
+      }
+    )
+      .then((r) => res.send(r))
+      .catch((err) => res.send(err));
+  }
+);
 
 App.use(Express.static("build"));
 // App.get("/", (req, res) => {
