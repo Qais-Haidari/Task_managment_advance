@@ -62,8 +62,8 @@ App.post(
 );
 
 App.use(Express.static("build"));
-// App.get("/", (req, res) => {
-//   res.sendFile(path.resolve(__dirname, "build", "index.html"));
-// });
+App.get("/", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "build", "index.html"));
+});
 
 App.listen(PORT, console.log(`SERVER START AT ${PORT}`));
