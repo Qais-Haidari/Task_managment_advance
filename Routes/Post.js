@@ -88,6 +88,7 @@ Router.post("/createTask", async (req, res) => {
   var sMinutes = minutes.toString();
   if (hours < 10) sHours = "0" + sHours;
   if (minutes < 10) sMinutes = "0" + sMinutes;
+
   var time_ = req.body.end_date_time.split(" ")[1];
   var hours_ = Number(time_.split(":")[0]);
   var minutes_ = Number(time_.split(":")[1]);
@@ -106,11 +107,14 @@ Router.post("/createTask", async (req, res) => {
   const Assign_to_Department = req.body.Assign_to_Department;
   const Escalated_to_User = req.body.Escalated_to_User;
   const Escalated_to_Department = req.body.Escalated_to_Department;
+  let oldtask;
   if (req.body.AddTime != "0") {
-    const oldtask = await Task.find({
-      start_time: { $gt: start_time },
+    oldtask = await Task.find({
+      end_time: { $gt: end_time },
       Assign_to_User: Assign_to_User,
     });
+    console.log(oldtask);
+    console.log(end_time);
     for (let index = 0; index < oldtask.length; index++) {
       const element = oldtask[index];
       let starttime;

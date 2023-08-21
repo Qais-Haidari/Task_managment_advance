@@ -54,17 +54,19 @@ Router.post("/AuthUpdateFeedback/:id", (req, res) => {
 // Approve Task
 Router.post("/AuthUpdateApprove/:id/:taskid", async (req, res) => {
   const count = await TaskAuth.find({
-    Approve: false,
+    isAdminApproved: "NO",
   }).countDocuments();
   if (count === 1) {
-    Task.findOneAndUpdate({ ID: req.params.taskid }, { is_task_done: true });
+    await Task.findOneAndUpdate(
+      { ID: req.params.taskid },
+      { is_task_done: true }
+    );
   }
   TaskAuth.findOneAndUpdate(
     { ID: req.params.id },
     {
       isUserSubmit: "Yes",
       isAdminApproved: "Yes",
-      Approve: true,
     }
   )
     .then((r) => res.send(r))

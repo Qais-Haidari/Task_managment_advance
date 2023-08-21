@@ -15,7 +15,11 @@ const TaskAuth = require("./Model/TaskAuth");
 App.use(Express.json());
 App.use(Express.urlencoded({ extended: false }));
 App.use(Helmet());
-App.use(Cors("*"));
+var corsOptions = {
+  origin: "http://example.com",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+App.use(Cors(corsOptions));
 App.use(morgan("tiny"));
 App.use(hpp());
 
@@ -47,6 +51,7 @@ App.post(
   "/image/:id/:taskid/:filename/:date/:ActionedBy",
   upload.single("file"),
   function (req, res) {
+    console.log(req.params);
     TaskAuth.findOneAndUpdate(
       { ID: req.params.id, Task_ID: req.params.taskid },
       {
@@ -61,7 +66,7 @@ App.post(
   }
 );
 
-App.use(Express.static("build"));
+// App.use(Express.static("build"));
 App.get("/", (req, res) => {
   res.sendFile(path.resolve(__dirname, "build", "index.html"));
 });
