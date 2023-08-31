@@ -6,6 +6,8 @@ const User = require("../Model/User");
 const Department = require("../Model/Department");
 const Task = require("../Model/Tasks");
 const TaskAuth = require("../Model/TaskAuth");
+const PrimaryTasks = require("../Model/PrimaryTasks");
+const PrimaryTaskAuth = require("../Model/PrimaryTaskAuth");
 
 // Update Task Auth Value
 Router.post("/AuthUpdateValue/:id/:taskid", (req, res) => {
@@ -74,11 +76,14 @@ Router.post("/AuthUpdateApprove/:id/:taskid", async (req, res) => {
 });
 
 Router.post("/BuldUpdate", async (req, res) => {
-  let IDs = req.body.IDs.join("").split("");
-  for (let index = 0; index < IDs.length; index++) {
-    let Data = await Task.findOne({ ID: IDs[index] });
+  let IDs = req.body.IDs;
+  var filtered = IDs.filter(function (el) {
+    return el != null;
+  });
+  for (let index = 0; index < filtered.length; index++) {
+    let Data = await Task.findOne({ ID: filtered[index] });
     Task.findOneAndUpdate(
-      { ID: IDs[index] },
+      { ID: filtered[index] },
       {
         Short_description:
           req.body.Short_description !== ""
@@ -148,8 +153,100 @@ Router.post("/rollover/:id/:time", async (req, res) => {
     },
     {
       is_task_rollovered: true,
-      start_date_time: newDate + " " + newTime.start_date_time.split(" ")[1],
-      end_date_time: newDate + " " + newTime.start_date_time.split(" ")[1],
+      is_task_done: false,
+      start_date_time: req.params.time,
+    }
+  )
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+
+// Task Update
+Router.post("/createTask/update/:id", (req, res) => {
+  Task.findOneAndUpdate(
+    {
+      ID: req.params.id,
+    },
+    {
+      Short_description: req.body.Short_description,
+      Summary: req.body.Summary,
+      Priority: req.body.Priority,
+      TaskNumber: req.body.TaskNumber,
+      Tast_duration: req.body.Tast_duration,
+      Assign_to_User: req.body.Assign_to_User,
+      Assign_to_Department: req.body.Assign_to_Department,
+      Escalated_to_User: req.body.Escalated_to_User,
+      Escalated_to_Department: req.body.Escalated_to_Department,
+      Email_Notify: req.body.Email_Notify,
+      SMS_Notifiy: req.body.SMS_Notifiy,
+      Task_Recurrence: req.body.Task_Recurrence,
+      Monday: req.body.Monday,
+      Thuesday: req.body.Thuesday,
+      Wednesday: req.body.Wednesday,
+      Thudesday: req.body.Thuesday,
+      Friday: req.body.Friday,
+      Saturday: req.body.Saturday,
+      Sunday: req.body.Sunday,
+      StartDate: req.body.StartDate,
+      EndDate: req.body.EndDate,
+      StartTime: req.body.StartTime,
+      EndTime: req.body.EndTime,
+    }
+  )
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+
+// PRIMARY TASKS
+// Task Update
+Router.post("/PrimaryTask/update/:id", (req, res) => {
+  PrimaryTasks.findOneAndUpdate(
+    {
+      ID: req.params.id,
+    },
+    {
+      Short_description: req.body.Short_description,
+      Summary: req.body.Summary,
+      Priority: req.body.Priority,
+      TaskNumber: req.body.TaskNumber,
+      Tast_duration: req.body.Tast_duration,
+      Assign_to_User: req.body.Assign_to_User,
+      Assign_to_Department: req.body.Assign_to_Department,
+      Escalated_to_User: req.body.Escalated_to_User,
+      Escalated_to_Department: req.body.Escalated_to_Department,
+      Email_Notify: req.body.Email_Notify,
+      SMS_Notifiy: req.body.SMS_Notifiy,
+      Task_Recurrence: req.body.Task_Recurrence,
+      Monday: req.body.Monday,
+      Thuesday: req.body.Thuesday,
+      Wednesday: req.body.Wednesday,
+      Thudesday: req.body.Thuesday,
+      Friday: req.body.Friday,
+      Saturday: req.body.Saturday,
+      Sunday: req.body.Sunday,
+      StartDate: req.body.StartDate,
+      EndDate: req.body.EndDate,
+      StartTime: req.body.StartTime,
+      EndTime: req.body.EndTime,
+    }
+  )
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+// Task Auth Update
+Router.post("/PrimaryTaskAuth/update/:id", (req, res) => {
+  // console.log(req.params.id);
+  // console.log(req.body);
+  PrimaryTaskAuth.findOneAndUpdate(
+    {
+      ID: req.params.id,
+    },
+    {
+      Type: req.body.Type,
+      MinValue: req.body.Min,
+      MaxValue: req.body.Max,
+      ExptectedValue: req.body.Expected,
+      Questions: req.body.Question,
     }
   )
     .then((r) => res.send(r))

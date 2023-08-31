@@ -5,6 +5,8 @@ const axios = require("axios");
 const User = require("../Model/User");
 const Department = require("../Model/Department");
 const Task = require("../Model/Tasks");
+const PrimaryTask = require("../Model/PrimaryTasks");
+const PrimaryTaskAuth = require("../Model/PrimaryTaskAuth");
 const multer = require("multer");
 const TaskAuth = require("../Model/TaskAuth");
 const moment = require("moment");
@@ -76,174 +78,60 @@ Router.post("/createDepartment", (req, res) => {
 
 // create Task
 Router.post("/createTask", async (req, res) => {
-  const start_date_time = req.body.start_date_time;
-  const end_date_time = req.body.end_date_time;
+  const AddNumber = req.body.TaskNumber;
+  const HourMins = req.body.Tast_duration;
   var time = req.body.start_date_time.split(" ")[1];
   var hours = Number(time.split(":")[0]);
   var minutes = Number(time.split(":")[1]);
   var AMPM = req.body.start_date_time.split(" ")[2];
-  if (AMPM == "PM" && hours < 12) hours = hours + 12;
-  if (AMPM == "AM" && hours == 12) hours = hours - 12;
-  var sHours = hours.toString();
-  var sMinutes = minutes.toString();
-  if (hours < 10) sHours = "0" + sHours;
-  if (minutes < 10) sMinutes = "0" + sMinutes;
-
-  var time_ = req.body.end_date_time.split(" ")[1];
-  var hours_ = Number(time_.split(":")[0]);
-  var minutes_ = Number(time_.split(":")[1]);
-  var AMPM_ = req.body.end_date_time.split(" ")[2];
-  if (AMPM_ == "PM" && hours_ < 12) hours_ = hours_ + 12;
-  if (AMPM_ == "AM" && hours_ == 12) hours_ = hours_ - 12;
-  var sHours_ = hours_.toString();
-  var sMinutes_ = minutes_.toString();
-  if (hours_ < 10) sHours_ = "0" + sHours_;
-  if (minutes_ < 10) sMinutes_ = "0" + sMinutes_;
-
-  const start_time = sHours + ":" + sMinutes;
-  const end_time = sHours_ + ":" + sMinutes_;
-
+  let EndTime = moment(hours + ":" + minutes + " " + AMPM, ["h:mm A"])
+    .add(AddNumber, HourMins)
+    .format("HH:mm");
+  let startTime = moment(hours + ":" + minutes + " " + AMPM, ["h:mm A"]).format(
+    "HH:mm"
+  );
+  let Date = req.body.start_date_time.split(" ")[0];
   const Assign_to_User = req.body.Assign_to_User;
   const Assign_to_Department = req.body.Assign_to_Department;
   const Escalated_to_User = req.body.Escalated_to_User;
   const Escalated_to_Department = req.body.Escalated_to_Department;
-  let oldtask;
-  if (req.body.AddTime != "0") {
-    oldtask = await Task.find({
-      end_time: { $gt: end_time },
-      Assign_to_User: Assign_to_User,
-    });
-    console.log(oldtask);
-    console.log(end_time);
-    for (let index = 0; index < oldtask.length; index++) {
-      const element = oldtask[index];
-      let starttime;
-      let endtime;
 
-      switch (req.body.AddTime) {
-        case "5 Min":
-          starttime = moment(
-            element.start_date_time.split(" ")[0] + " " + element.start_time
-          )
-            .add(5, "m")
-            .format("DD.MM.YYYY HH:mm")
-            .split(" ")[1];
-          endtime = moment(
-            element.end_date_time.split(" ")[0] + " " + element.start_time
-          )
-            .add(5, "m")
-            .format("DD.MM.YYYY HH:mm")
-            .split(" ")[1];
-          await Task.findOneAndUpdate(
-            { ID: element.ID },
-            { start_time: starttime, end_time: endtime }
-          );
-          break;
+  // let oldtask_ = await Task.findOne({
+  //   start_time: { $gt: EndTime },
+  //   Assign_to_User: Assign_to_User,
+  // }).sort("start_time");
+  // console.log(EndTime);
+  // console.log(oldtask_.start_time);
 
-        case "10 Min":
-          starttime = moment(
-            element.start_date_time.split(" ")[0] + " " + element.start_time
-          )
-            .add(10, "m")
-            .format("DD.MM.YYYY HH:mm")
-            .split(" ")[1];
-          endtime = moment(
-            element.end_date_time.split(" ")[0] + " " + element.start_time
-          )
-            .add(10, "m")
-            .format("DD.MM.YYYY HH:mm")
-            .split(" ")[1];
-          await Task.findOneAndUpdate(
-            { ID: element.ID },
-            { start_time: starttime, end_time: endtime }
-          );
-          break;
-        case "15 Min":
-          starttime = moment(
-            element.start_date_time.split(" ")[0] + " " + element.start_time
-          )
-            .add(15, "m")
-            .format("DD.MM.YYYY HH:mm")
-            .split(" ")[1];
-          endtime = moment(
-            element.end_date_time.split(" ")[0] + " " + element.start_time
-          )
-            .add(15, "m")
-            .format("DD.MM.YYYY HH:mm")
-            .split(" ")[1];
-          await Task.findOneAndUpdate(
-            { ID: element.ID },
-            { start_time: starttime, end_time: endtime }
-          );
-          break;
-        case "30 Min":
-          starttime = moment(
-            element.start_date_time.split(" ")[0] + " " + element.start_time
-          )
-            .add(30, "m")
-            .format("DD.MM.YYYY HH:mm")
-            .split(" ")[1];
-          endtime = moment(
-            element.end_date_time.split(" ")[0] + " " + element.start_time
-          )
-            .add(30, "m")
-            .format("DD.MM.YYYY HH:mm")
-            .split(" ")[1];
-          await Task.findOneAndUpdate(
-            { ID: element.ID },
-            { start_time: starttime, end_time: endtime }
-          );
-          break;
-        case "1 Hour":
-          starttime = moment(
-            element.start_date_time.split(" ")[0] + " " + element.start_time
-          )
-            .add(1, "h")
-            .format("DD.MM.YYYY HH:mm")
-            .split(" ")[1];
-          endtime = moment(
-            element.end_date_time.split(" ")[0] + " " + element.start_time
-          )
-            .add(1, "h")
-            .format("DD.MM.YYYY HH:mm")
-            .split(" ")[1];
-          await Task.findOneAndUpdate(
-            { ID: element.ID },
-            { start_time: starttime, end_time: endtime }
-          );
-          break;
-        case "2 Hour":
-          starttime = moment(
-            element.start_date_time.split(" ")[0] + " " + element.start_time
-          )
-            .add(2, "h")
-            .format("DD.MM.YYYY HH:mm")
-            .split(" ")[1];
-          endtime = moment(
-            element.end_date_time.split(" ")[0] + " " + element.start_time
-          )
-            .add(2, "h")
-            .format("DD.MM.YYYY HH:mm")
-            .split(" ")[1];
-          await Task.findOneAndUpdate(
-            { ID: element.ID },
-            { start_time: starttime, end_time: endtime }
-          );
-          break;
+  // if (oldtask_.start_time - 1 == EndTime) {
+  //   console.log("Matched");
+  // }
 
-        default:
-          break;
-      }
-    }
-  }
+  // let oldtask = await Task.find({
+  //   start_time: { $gt: EndTime },
+  //   Assign_to_User: Assign_to_User,
+  // });
+  // for (let index = 0; index < oldtask.length; index++) {
+  //   let NewEnd = moment(oldtask[index].end_time, ["HHmm"])
+  //     .add(AddNumber, HourMins)
+  //     .format("HH:mm");
+  //   let NewStart = moment(oldtask[index].start_time, ["HHmm"])
+  //     .add(AddNumber, HourMins)
+  //     .format("HH:mm");
+
+  //   await Task.findOneAndUpdate(
+  //     { ID: oldtask[index].ID },
+  //     { end_time: NewEnd, start_time: NewStart }
+  //   );
+  // }
   const NewTask = new Task({
     ID: uuidv4(),
+    // Duration: `${AddNumber}`,
     Short_description: req.body.Short_description,
     Summary: req.body.Summary,
     Priority: req.body.Priority,
-    start_date_time: start_date_time,
-    end_date_time: end_date_time,
-    Tast_duration: req.body.Tast_duration,
+    start_date_time: Date,
+    end_date_time: Date,
     Task_Recurrence: req.body.Task_Recurrence,
     Assign_to_User: req.body.Assign_to_User,
     Assign_to_Department: req.body.Assign_to_Department,
@@ -251,8 +139,8 @@ Router.post("/createTask", async (req, res) => {
     Escalated_to_Department: req.body.Escalated_to_Department,
     Email_Notify: req.body.Email_Notify,
     SMS_Notifiy: req.body.Email_SMS,
-    end_time: end_time,
-    start_time: start_time,
+    end_time: EndTime,
+    start_time: startTime,
     Monday: req.body.Monday,
     Thuesday: req.body.Thuesday,
     Wednesday: req.body.Wednesday,
@@ -270,6 +158,7 @@ Router.post("/createTask", async (req, res) => {
     }
     res.send("Task Successfully Created");
   });
+  console.log(NewTask);
   const TaskAuths = new TaskAuth({
     ID: uuidv4(),
     Task_ID: NewTask.ID,
@@ -280,7 +169,7 @@ Router.post("/createTask", async (req, res) => {
     Questions: req.body.Questions,
     User: Assign_to_User,
     Department: Assign_to_Department,
-    Date: start_date_time,
+    Date: Date,
     EsUser: Escalated_to_User,
     EsDepartment: Escalated_to_Department,
   });
@@ -289,6 +178,89 @@ Router.post("/createTask", async (req, res) => {
       console.log(err);
     } else {
       console.log("Task Auth Successfully Created");
+    }
+  });
+
+  // @@@@@@@@@@@@@@@@@@@@@@@
+  // PRIMARY TASKS
+  const PrimaryNewTask = new PrimaryTask({
+    ID: uuidv4(),
+    // Duration: `${AddNumber}`,
+    Short_description: req.body.Short_description,
+    Summary: req.body.Summary,
+    Priority: req.body.Priority,
+    start_date_time: Date,
+    end_date_time: Date,
+    Task_Recurrence: req.body.Task_Recurrence,
+    Assign_to_User: req.body.Assign_to_User,
+    Assign_to_Department: req.body.Assign_to_Department,
+    Escalated_to_User: req.body.Escalated_to_User,
+    Escalated_to_Department: req.body.Escalated_to_Department,
+    Email_Notify: req.body.Email_Notify,
+    SMS_Notifiy: req.body.Email_SMS,
+    end_time: EndTime,
+    start_time: startTime,
+    Monday: req.body.Monday,
+    Thuesday: req.body.Thuesday,
+    Wednesday: req.body.Wednesday,
+    Thudesday: req.body.Thudesday,
+    Friday: req.body.Friday,
+    Saturday: req.body.Saturday,
+    Sunday: req.body.Sunday,
+    Task_Date: req.body.Date,
+  });
+  PrimaryNewTask.save(function (err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Task Successfully Created");
+    }
+    // res.send("Task Successfully Created");
+  });
+  const PrimaryTaskAuths = new PrimaryTaskAuth({
+    ID: uuidv4(),
+    Task_ID: PrimaryNewTask.ID,
+    Type: req.body.Type,
+    MinValue: req.body.MinValue,
+    MaxValue: req.body.MaxValue,
+    ExptectedValue: req.body.ExptectedValue,
+    Questions: req.body.Questions,
+    User: Assign_to_User,
+    Department: Assign_to_Department,
+    Date: Date,
+    EsUser: Escalated_to_User,
+    EsDepartment: Escalated_to_Department,
+  });
+  PrimaryTaskAuths.save(function (err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Task Auth Successfully Created");
+    }
+  });
+});
+
+Router.post("/Priamry/createTask", (req, res) => {
+  const PrimaryTaskAuths = new PrimaryTaskAuth({
+    ID: uuidv4(),
+    Task_ID: req.body.Task_ID,
+    Type: req.body.Type,
+    MinValue: req.body.MinValue,
+    MaxValue: req.body.MaxValue,
+    ExptectedValue: req.body.ExptectedValue,
+    Questions: req.body.Questions,
+    User: req.body.Assign_to_User,
+    Date: Date,
+    Department: req.body.Assign_to_Department,
+    EsUser: req.body.Escalated_to_User,
+    EsDepartment: req.body.Escalated_to_Department,
+  });
+  PrimaryTaskAuths.save(function (err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Task Auth Successfully Created");
+      res.send(result);
     }
   });
 });

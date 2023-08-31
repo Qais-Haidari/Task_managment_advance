@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-let Task = new mongoose.Schema({
+let PrimaryTask = new mongoose.Schema({
   ID: {
     type: String,
     required: true,
@@ -129,4 +129,4 @@ let Task = new mongoose.Schema({
   },
 });
 
-module.exports = Task = mongoose.model("Tasks", Task);
+module.exports = PrimaryTask = mongoose.model("PrimaryTasks", PrimaryTask);

@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const axios = require("axios");
 const Users = require("../Model/User");
 const Task = require("../Model/Tasks");
+const PrimaryTask = require("../Model/PrimaryTasks");
+const PrimaryTaskAuth = require("../Model/PrimaryTaskAuth");
 const Department = require("../Model/Department");
 const TaskAuth = require("../Model/TaskAuth");
 const moment = require("moment");
@@ -11,6 +13,13 @@ const moment = require("moment");
 // GET ALL Users
 Router.get("/Users", (req, res) => {
   Users.find()
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+
+// GET User By Name
+Router.get("/Users/:name", (req, res) => {
+  Users.findOne({ First_Name: req.params.name })
     .then((r) => res.send(r))
     .catch((err) => err);
 });
@@ -36,7 +45,7 @@ Router.get("/Users/active", (req, res) => {
     .catch((err) => err);
 });
 // Get Task
-Router.get("/task/:date/:time", (req, res) => {
+Router.get("/task/:date/:time/:date2", (req, res) => {
   var time = req.params.time;
   var hours = Number(time.split(":")[0]);
   var minutes = Number(time.split(":")[1].split(" ")[0]);
@@ -50,20 +59,21 @@ Router.get("/task/:date/:time", (req, res) => {
   const time_ = sHours + ":" + sMinutes;
   Task.find({
     Assign_to_User: req.params.date,
-    end_time: { $lt: time_ },
+    end_time: { $gt: time_ },
     is_task_done: false,
+    Task_Date: req.params.date2,
   })
     .then((r) => res.send(r))
     .catch((err) => err);
 });
 // Get Task @BULK
 Router.get("/task_", (req, res) => {
-  Task.find({ Assign_to_User: req.params.date, is_task_done: false })
+  Task.find({ is_task_done: false })
     .then((r) => res.send(r))
     .catch((err) => err);
 });
 // Get Task ROLLOVER
-Router.get("/task/rollover/:date", async (req, res) => {
+Router.get("/task/rollover/get/new/:date", async (req, res) => {
   Task.find({
     is_task_rollovered: false,
     start_date_time: { $lt: req.params.date },
@@ -81,6 +91,7 @@ Router.get("/task/:id", (req, res) => {
 // Get Task by Name
 Router.get("/tasks/:id", (req, res) => {
   Task.find({ Assign_to_User: req.params.id })
+    .sort("start_time")
     .then((r) => res.send(r))
     .catch((err) => err);
 });
@@ -132,16 +143,19 @@ Router.get("/department/owner/:id/:date", (req, res) => {
     .catch((err) => err);
 });
 // GET SERVERAL DAY REQUEST DATA
-Router.get("/RDATA/:a", (req, res) => {
+Router.get("/RDATA/:a", async (req, res) => {
   console.log(req.params.a);
   if (req.params.a.split(" ")[1] !== "undefined") {
-    Task.find({
+    const FormReport = [];
+    const oneDate = await Task.find({
       Task_Date: req.params.a.split(" ")[0],
-    })
-      .then((r) => {
-        res.send(r);
-      })
-      .catch((err) => res.send(err));
+    });
+    for (let index = 0; index < oneDate.length; index++) {
+      const element = oneDate[index];
+      let data = await TaskAuth.find({ Task_ID: element.ID });
+      FormReport[index] = [element, { data }];
+    }
+    res.send(FormReport);
   } else {
     Task.find({
       Task_Date: {
@@ -178,30 +192,30 @@ Router.get("/TaskAuthApproveDepartment/:department", (req, res) => {
 });
 
 // Dashboard
-// Get Task Auth by user and isAdminApprove
-Router.get("/task/dashboard/:date", (req, res) => {
-  res.send("one");
-  // Task.find({
-  //   Task_Date: req.params.date,
-  //   is_task_done: false,
-  //   Assign_to_User: { $ne: "" },
-  // })
-  //   .then((r) => res.send(r))
-  //   .catch((err) => err);
-});
-// Get Task Auth by user and isAdminApprove
-Router.get("/task/dashboard/complete/:date", (req, res) => {
-  TaskAuth.find({
-    isAdminApproved: "Yes",
-    isUserSubmit: "Yes",
-    // Task_Date: req.params.date,
-    // is_task_done: true,
+// Router.get("/task/dashboard/:date", (req, res) => {
+Router.get("/task/dashboard/get/new/:name", (req, res) => {
+  Task.find({
+    Task_Date: req.params.name,
+    is_task_done: false,
+    Assign_to_User: { $ne: "" },
   })
     .then((r) => res.send(r))
     .catch((err) => err);
 });
 // Get Task Auth by user and isAdminApprove
-Router.get("/task/dashboard/AuthTask/:date", (req, res) => {
+Router.get("/task/dashboard/complete/new/:name", (req, res) => {
+  Task.find({
+    // isAdminApproved: "Yes",
+    // isUserSubmit: "Yes",
+    Task_Date: req.params.name,
+    is_task_done: true,
+  })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+// Get Task Auth by user and isAdminApprove
+Router.get("/task/dashboard/AuthTask/new/:name", (req, res) => {
+  console.log(req.params.name);
   TaskAuth.find({
     isAdminApproved: "NO",
     isUserSubmit: "Yes",
@@ -245,12 +259,42 @@ Router.get("/task/dashboard/Escalated/:date/:time", (req, res) => {
   if (minutes < 10) sMinutes = "0" + sMinutes;
   const time_ = sHours + ":" + sMinutes;
   Task.find({
+    // $or: [
+    //   {
+    //     Escalated_to_User: { $ne: "" },
+    //   },
+    //   {
+    //     Escalated_to_Department: { $ne: "" },
+    //   },
+    // ],
+    Task_Date: req.params.date,
+    end_time: { $lt: time_ },
+    is_task_done: false,
+  })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+
+// Get Task Auth by user and isAdminApprove
+Router.get("/escalated/:date/:time/:user/:department", async (req, res) => {
+  var time = req.params.time;
+  var hours = Number(time.split(":")[0]);
+  var minutes = Number(time.split(":")[1].split(" ")[0]);
+  var AMPM = time.split(" ")[1];
+  if (AMPM == "PM" && hours < 12) hours = hours + 12;
+  if (AMPM == "AM" && hours == 12) hours = hours - 12;
+  var sHours = hours.toString();
+  var sMinutes = minutes.toString();
+  if (hours < 10) sHours = "0" + sHours;
+  if (minutes < 10) sMinutes = "0" + sMinutes;
+  const time_ = sHours + ":" + sMinutes;
+  Task.find({
     $or: [
       {
-        Escalated_to_User: { $ne: "" },
+        Escalated_to_User: req.params.user,
       },
       {
-        Escalated_to_Department: { $ne: "" },
+        Escalated_to_Department: req.params.department,
       },
     ],
     Task_Date: req.params.date,
@@ -261,4 +305,29 @@ Router.get("/task/dashboard/Escalated/:date/:time", (req, res) => {
     .catch((err) => err);
 });
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// PRIMARY TASKS
+Router.get("/PrimaryTasks", (req, res) => {
+  PrimaryTask.find()
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+// PRIMARY TASKS BY ID
+Router.get("/PrimaryTasks/:id", (req, res) => {
+  PrimaryTask.findOne({ ID: req.params.id })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+// PRIMARY TASKS BY ID
+Router.get("/PrimaryTasks/Auth/:id", (req, res) => {
+  PrimaryTaskAuth.find({ Task_ID: req.params.id })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+// PRIMARY TASKS BY ID
+Router.get("/PrimaryTasks/Auth/one/:id", (req, res) => {
+  PrimaryTaskAuth.findOne({ ID: req.params.id })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
 module.exports = Router;

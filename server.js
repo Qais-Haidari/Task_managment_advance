@@ -15,11 +15,7 @@ const TaskAuth = require("./Model/TaskAuth");
 App.use(Express.json());
 App.use(Express.urlencoded({ extended: false }));
 App.use(Helmet());
-var corsOptions = {
-  origin: "http://example.com",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-App.use(Cors(corsOptions));
+App.use(Cors("*"));
 App.use(morgan("tiny"));
 App.use(hpp());
 
@@ -56,9 +52,11 @@ App.post(
       { ID: req.params.id, Task_ID: req.params.taskid },
       {
         isUserSubmit: "Yes",
+        Attachment: "Yes",
         Date: req.params.date,
         ActionedBy: req.params.ActionedBy,
         AttachmentPath: req.params.filename,
+        SubmitDate: req.params.date,
       }
     )
       .then((r) => res.send(r))
