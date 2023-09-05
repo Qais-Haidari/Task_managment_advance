@@ -56,8 +56,10 @@ Router.post("/AuthUpdateFeedback/:id", (req, res) => {
 // Approve Task
 Router.post("/AuthUpdateApprove/:id/:taskid", async (req, res) => {
   const count = await TaskAuth.find({
+    Task_ID: req.params.taskid,
     isAdminApproved: "NO",
   }).countDocuments();
+  console.log(count);
   if (count === 1) {
     await Task.findOneAndUpdate(
       { ID: req.params.taskid },
@@ -155,6 +157,7 @@ Router.post("/rollover/:id/:time", async (req, res) => {
       is_task_rollovered: true,
       is_task_done: false,
       start_date_time: req.params.time,
+      Task_Date: req.params.time,
     }
   )
     .then((r) => res.send(r))
@@ -247,6 +250,28 @@ Router.post("/PrimaryTaskAuth/update/:id", (req, res) => {
       MaxValue: req.body.Max,
       ExptectedValue: req.body.Expected,
       Questions: req.body.Question,
+    }
+  )
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+// Update User
+Router.post("/CreateUser/update/:id", (req, res) => {
+  User.findOneAndUpdate(
+    {
+      ID: req.params.id,
+    },
+    {
+      Status: req.body.Status,
+      ID: req.body.ID,
+      First_Name: req.body.First_Name,
+      Last_Name: req.body.Last_Name,
+      Email: req.body.Email,
+      Phone: req.body.Phone,
+      Start_of_business: req.body.Start_of_business,
+      End_of_business: req.body.End_of_business,
+      Is_Admin: req.body.Is_Admin,
+      Departments: req.body.Department,
     }
   )
     .then((r) => res.send(r))

@@ -16,6 +16,12 @@ Router.get("/Users", (req, res) => {
     .then((r) => res.send(r))
     .catch((err) => err);
 });
+// GET User by ID
+Router.get("/User/one/:id", (req, res) => {
+  Users.findOne({ ID: req.params.id })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
 
 // GET User By Name
 Router.get("/Users/:name", (req, res) => {
@@ -76,7 +82,7 @@ Router.get("/task_", (req, res) => {
 Router.get("/task/rollover/get/new/:date", async (req, res) => {
   Task.find({
     is_task_rollovered: false,
-    start_date_time: { $lt: req.params.date },
+    Task_Date: { $lt: req.params.date },
   })
     .then((r) => res.send(r))
     .catch((err) => err);
@@ -133,18 +139,29 @@ Router.get("/department", (req, res) => {
     .catch((err) => err);
 });
 // Get Department for department owner
-Router.get("/department/owner/:id/:date", (req, res) => {
+Router.get("/department/owner/:id/:date/:one", (req, res) => {
+  var time = req.params.date;
+  var hours = Number(time.split(":")[0]);
+  var minutes = Number(time.split(":")[1].split(" ")[0]);
+  var AMPM = time.split(" ")[1];
+  if (AMPM == "PM" && hours < 12) hours = hours + 12;
+  if (AMPM == "AM" && hours == 12) hours = hours - 12;
+  var sHours = hours.toString();
+  var sMinutes = minutes.toString();
+  if (hours < 10) sHours = "0" + sHours;
+  if (minutes < 10) sMinutes = "0" + sMinutes;
+  const time_ = sHours + ":" + sMinutes;
   Task.find({
     Assign_to_Department: req.params.id,
     is_task_done: false,
-    Task_Date: req.params.date,
+    Task_Date: req.params.one,
+    end_time: { $gt: time_ },
   })
     .then((r) => res.send(r))
     .catch((err) => err);
 });
 // GET SERVERAL DAY REQUEST DATA
 Router.get("/RDATA/:a", async (req, res) => {
-  console.log(req.params.a);
   if (req.params.a.split(" ")[1] !== "undefined") {
     const FormReport = [];
     const oneDate = await Task.find({
@@ -152,7 +169,10 @@ Router.get("/RDATA/:a", async (req, res) => {
     });
     for (let index = 0; index < oneDate.length; index++) {
       const element = oneDate[index];
-      let data = await TaskAuth.find({ Task_ID: element.ID });
+      let data = await TaskAuth.find({
+        Task_ID: element.ID,
+        isAdminApproved: "Yes",
+      });
       FormReport[index] = [element, { data }];
     }
     res.send(FormReport);
