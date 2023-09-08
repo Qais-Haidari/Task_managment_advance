@@ -1,0 +1,71 @@
+import Axios from "axios";
+import React, { useEffect, useState } from "react";
+import { redirect } from "react-router-dom";
+
+export default function Auth() {
+  const [state, setstate] = useState([]);
+  const [UserDetail, setUserDetail] = useState("");
+  useEffect(() => {
+    Axios.get("http://10.0.0.112:5000/Users")
+      .then((res) => {
+        setstate(res.data);
+      })
+      .catch((err) => (document.body.innerHTML = err));
+  }, []);
+
+  const GetDetail = (e) => {
+    Axios.get("http://10.0.0.112:5000/Userslogin/" + e.target.value)
+      .then((res) => {
+        setUserDetail(res.data);
+      })
+      .catch((err) => (document.body.innerHTML = err));
+  };
+
+  const Login = () => {
+    if (!UserDetail) {
+      alert("please select your User Name");
+    } else {
+      localStorage.setItem("Status", UserDetail.Status);
+      localStorage.setItem("ID", UserDetail.ID);
+      localStorage.setItem("First_Name", UserDetail.First_Name);
+      localStorage.setItem("Last_Name", UserDetail.Last_Name);
+      localStorage.setItem("Email", UserDetail.Email);
+      localStorage.setItem("Phone", UserDetail.Phone);
+      localStorage.setItem("Start_of_business", UserDetail.Start_of_business);
+      localStorage.setItem("End_of_business", UserDetail.End_of_business);
+      localStorage.setItem("Is_Admin", UserDetail.Is_Admin);
+      localStorage.setItem("Department", UserDetail.Departments);
+      localStorage.setItem("DepartmentAdmin", UserDetail.DepartmentsAdmin);
+      window.location.reload();
+    }
+  };
+  return (
+    <div className="">
+      <div class="text-center mt-10">
+        <div class="mb-4">
+          <label
+            class="block text-grey-darker text-lg text-green-600 font-bold mb-2"
+            for="username"
+          >
+            Username
+          </label>
+          <input text placeholder="Search Username" />
+          <ul className=" w-3/4 mx-10" onClick={GetDetail}>
+            {state.map((r) => (
+              <option>{r.First_Name}</option>
+            ))}
+          </ul;>
+        </div>
+        <div class="text-center w-full">
+          <button
+            class=" bg-green-500 text-center text-white font-bold py-2 px-4 rounded"
+            type="button"
+            onClick={Login}
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
