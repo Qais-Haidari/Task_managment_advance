@@ -216,7 +216,7 @@ Router.post("/createTask", async (req, res) => {
   });
   const PrimaryTaskAuths = new PrimaryTaskAuth({
     ID: uuidv4(),
-    Task_ID: NewTask.ID,
+    Task_ID: PrimaryNewTask.ID,
     Type: req.body.Type,
     MinValue: req.body.MinValue,
     MaxValue: req.body.MaxValue,
