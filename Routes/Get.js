@@ -272,7 +272,7 @@ Router.get("/task/dashboard/Department/:date/:time", (req, res) => {
     .catch((err) => err);
 });
 // Get Task Auth by user and isAdminApprove
-Router.get("/task/dashboard/Escalated/:date/:time", (req, res) => {
+Router.get("/task/dashboard/Escalated/:date/:time", async (req, res) => {
   var time = req.params.time;
   var hours = Number(time.split(":")[0]);
   var minutes = Number(time.split(":")[1].split(" ")[0]);
@@ -335,6 +335,24 @@ Router.get("/escalated/:date/:time/:user/:department", async (req, res) => {
 // PRIMARY TASKS
 Router.get("/PrimaryTasks", (req, res) => {
   PrimaryTask.find()
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+// PRIMARY TASKS BY Assign User
+Router.get("/PrimaryTasks/user/:name", (req, res) => {
+  PrimaryTask.find({ Assign_to_User: req.params.name })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+// PRIMARY TASKS BY Assign Department
+Router.get("/PrimaryTasks/department/:name", (req, res) => {
+  PrimaryTask.find({ Assign_to_Department: req.params.name })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+// PRIMARY TASKS BY Priority
+Router.get("/PrimaryTasks/priority/:name", (req, res) => {
+  PrimaryTask.find({ Priority: req.params.name })
     .then((r) => res.send(r))
     .catch((err) => err);
 });

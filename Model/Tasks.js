@@ -134,6 +134,11 @@ let Task = new mongoose.Schema({
     required: false,
     default: false,
   },
+  Actioned: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 module.exports = Task = mongoose.model("Tasks", Task);

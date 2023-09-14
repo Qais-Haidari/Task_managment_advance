@@ -20,7 +20,12 @@ Router.post("/AuthUpdateValue/:id/:taskid", (req, res) => {
       ActionedBy: req.body.ActionedBy,
     }
   )
-    .then((r) => res.send(r))
+    .then((r) => {})
+    .catch((err) => res.send(err));
+  Task.findOneAndUpdate({ ID: req.params.taskid }, { Actioned: true })
+    .then((r) => {
+      res.send(r);
+    })
     .catch((err) => res.send(err));
 });
 
@@ -35,12 +40,17 @@ Router.post("/AuthUpdateYes/:id/:taskid", (req, res) => {
       ActionedBy: req.body.ActionedBy,
     }
   )
-    .then((r) => res.send(r))
+    .then((r) => {})
+    .catch((err) => res.send(err));
+  Task.findOneAndUpdate({ ID: req.params.taskid }, { Actioned: true })
+    .then((r) => {
+      res.send(r);
+    })
     .catch((err) => res.send(err));
 });
 
 // Reject Task and add Feedback
-Router.post("/AuthUpdateFeedback/:id", (req, res) => {
+Router.post("/AuthUpdateFeedback/:id/:taskid", (req, res) => {
   TaskAuth.findOneAndUpdate(
     { ID: req.params.id },
     {
@@ -49,7 +59,12 @@ Router.post("/AuthUpdateFeedback/:id", (req, res) => {
       SubmitDate: req.body.Date,
     }
   )
-    .then((r) => res.send(r))
+    .then((r) => {})
+    .catch((err) => res.send(err));
+  Task.findOneAndUpdate({ ID: req.params.taskid }, { Actioned: false })
+    .then((r) => {
+      res.send(r);
+    })
     .catch((err) => res.send(err));
 });
 
@@ -73,7 +88,12 @@ Router.post("/AuthUpdateApprove/:id/:taskid", async (req, res) => {
       isAdminApproved: "Yes",
     }
   )
-    .then((r) => res.send(r))
+    .then((r) => {})
+    .catch((err) => res.send(err));
+  Task.findOneAndUpdate({ ID: req.params.taskid }, { Actioned: false })
+    .then((r) => {
+      res.send(r);
+    })
     .catch((err) => res.send(err));
 });
 

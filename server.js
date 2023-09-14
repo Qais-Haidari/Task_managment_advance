@@ -34,7 +34,7 @@ Mongoose.connect("mongodb://127.0.0.1:27017tasks", {
 
 // ADD & REGISTER ROUTES
 App.use("/", require("./Routes/Get"));
-// App.use("/", require("./Routes/DELETE"));
+App.use("/", require("./Routes/Delete"));
 App.use("/", require("./Routes/Post"));
 App.use("/", require("./Routes/Update"));
 
@@ -63,6 +63,9 @@ App.post(
       }
     )
       .then((r) => console.log(""))
+      .catch((err) => res.send(err));
+    Task.findOneAndUpdate({ ID: req.params.taskid }, { Actioned: true })
+      .then((r) => {})
       .catch((err) => res.send(err));
     res.send("file uploaded");
   }
