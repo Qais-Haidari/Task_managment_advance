@@ -384,7 +384,7 @@ const Friday = async () => {
 // Friday();
 
 // run every Day 2AM
-cron("0 0 2 * * *", function () {
+cron.schedule("0 0 2 * * *", function () {
   Daily();
 });
 
