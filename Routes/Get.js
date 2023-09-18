@@ -241,10 +241,10 @@ Router.get("/task/dashboard/complete/new/:name", (req, res) => {
 });
 // Get Task Auth by user and isAdminApprove
 Router.get("/task/dashboard/AuthTask/new/:name", (req, res) => {
-  console.log(req.params.name);
   TaskAuth.find({
     isAdminApproved: "NO",
     isUserSubmit: "Yes",
+    // Date: req.params.name,
   })
     .then((r) => res.send(r))
     .catch((err) => err);
