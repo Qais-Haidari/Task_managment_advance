@@ -1,0 +1,121 @@
+import React, { useEffect, useState } from "react";
+import Layout from "../../App_1";
+import axios from "axios";
+
+import { MomentDate, getCurrentTimeDashboard } from "../../Utils/Functions";
+
+export default function Tasklist() {
+  const [unAction, setunAction] = useState([]);
+  // const [Complete, setComplete] = useState([]);
+  const [TaskAuth, setTaskAuth] = useState([]);
+  const [Department, setDepartment] = useState([]);
+  const [Escalated, setEscalated] = useState([]);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/task/dashboard/get/new/${MomentDate()}`)
+      .then((res) => {
+        setunAction(res.data);
+      })
+      .catch((err) => (document.body.innerHTML = err));
+    // axios
+    //   .get(`http://localhost:5000/task/dashboard/complete/new/${MomentDate()}`)
+    //   .then((res) => {
+    //     setComplete(res.data);
+    //   })
+    //   .catch((err) => (document.body.innerHTML = err));
+    axios
+      .get(`http://localhost:5000/task/dashboard/AuthTask/new/${MomentDate()}`)
+      .then((res) => {
+        console.log(res.data);
+        setTaskAuth(res.data);
+      })
+      .catch((err) => (document.body.innerHTML = err));
+    axios(
+      `http://localhost:5000/task/dashboard/Department/${MomentDate()}/${getCurrentTimeDashboard()}`
+    )
+      .then((res) => {
+        setDepartment(res.data);
+      })
+      .catch((err) => (document.body.innerHTML = err));
+    axios
+      .get(
+        `http://localhost:5000/task/dashboard/Escalated/${MomentDate()}/${getCurrentTimeDashboard()}`
+      )
+      .then((res) => {
+        setEscalated(res.data);
+      })
+      .catch((err) => (document.body.innerHTML = err));
+  }, []);
+  return (
+    <>
+      <Layout />
+      <section class="antialiased  text-gray-600 h-screen mt-1 px-2 rounded-md">
+        <div class="flex flex-col">
+          <div class="w-full bg-white shadow-lg rounded-sm border">
+            <div class="p-3">
+              <div class="overflow-x-auto">
+                <table class="table-auto w-full">
+                  <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+                    <tr>
+                      <th class="p-2 whitespace-nowrap">
+                        <div class="font-semibold text-left">Assign to</div>
+                      </th>
+                      <th class="p-2 whitespace-nowrap">
+                        <div class="font-semibold text-left">Escalated</div>
+                      </th>
+                      <th class="p-2 whitespace-nowrap">
+                        <div class="font-semibold text-left">Completed</div>
+                      </th>
+                      <th class="p-2 whitespace-nowrap">
+                        <div class="font-semibold text-left">
+                          Further Action
+                        </div>
+                      </th>
+                      <th class="p-2 whitespace-nowrap">
+                        <div class="font-semibold text-center">Incomplete</div>
+                      </th>
+                      <th class="p-2 whitespace-nowrap">
+                        <div class="font-semibold text-center">Tasks</div>
+                      </th>
+                      <th class="p-2 whitespace-nowrap">
+                        <div class="font-semibold text-center">Requirments</div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-sm divide-y divide-gray-100">
+                    <tr>
+                      <td class="p-2 whitespace-nowrap">
+                        <div class="flex items-center">
+                          <div class="font-medium text-gray-800">
+                            Alex Shatov
+                          </div>
+                        </div>
+                      </td>
+                      <td class="p-2 whitespace-nowrap">
+                        <div class="text-left">alexshatov@gmail.com</div>
+                      </td>
+                      <td class="p-2 whitespace-nowrap">
+                        <div class="text-left font-medium text-green-500">
+                          $2,890.66
+                        </div>
+                      </td>
+                      <td class="p-2 whitespace-nowrap">
+                        <div class="text-lg text-center">??</div>
+                      </td>
+                    </tr>
+                    <details className="group border p-3 w-full">
+                      <summary className="flex justify-between w-full items-center font-medium cursor-pointer list-none">
+                        <span className="transition group-open:rotate-180"></span>
+                      </summary>
+                      <div className=" w-full"></div>
+                    </details>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
