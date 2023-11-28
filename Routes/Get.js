@@ -199,7 +199,7 @@ Router.get("/RDATA/:a", async (req, res) => {
 // Get Task Auth by user and isAdminApprove
 Router.get("/TaskAuthApprove/:user", (req, res) => {
   TaskAuth.find({
-    ApproveBy: req.params.user,
+    Approve_By: req.params.user,
     isUserSubmit: "Yes",
     isAdminApproved: "NO",
   })

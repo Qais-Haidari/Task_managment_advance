@@ -60,6 +60,7 @@ const Daily = async () => {
     PrimaryTaskauths = await PrimaryTaskAuth.find({
       Task_ID: element.ID,
     });
+    // console.log(PrimaryTaskauths);
     for (let index1 = 0; index1 < PrimaryTaskauths.length; index1++) {
       await TaskAuth.create({
         ID: uuidv4(),
@@ -74,7 +75,7 @@ const Daily = async () => {
         Date: MomentDate(),
         EsUser: PrimaryTaskauths[index1].Escalated_to_User,
         EsDepartment: PrimaryTaskauths[index1].Escalated_to_Department,
-        ApproveBy: PrimaryTaskauths[index1].ApproveBy,
+        Approve_By: PrimaryTaskauths[index1].Approve_By,
       });
     }
   }
@@ -133,7 +134,7 @@ const Monday = async () => {
         Date: MomentDate(),
         EsUser: PrimaryTaskauths[index1].Escalated_to_User,
         EsDepartment: PrimaryTaskauths[index1].Escalated_to_Department,
-        ApproveBy: PrimaryTaskauths[index1].ApproveBy,
+        Approve_By: PrimaryTaskauths[index1].Approve_By,
       });
     }
   }
@@ -192,7 +193,7 @@ const Tuesday = async () => {
         Date: MomentDate(),
         EsUser: PrimaryTaskauths[index1].Escalated_to_User,
         EsDepartment: PrimaryTaskauths[index1].Escalated_to_Department,
-        ApproveBy: PrimaryTaskauths[index1].ApproveBy,
+        Approve_By: PrimaryTaskauths[index1].Approve_By,
       });
     }
   }
@@ -251,7 +252,7 @@ const Wednesday = async () => {
         Date: MomentDate(),
         EsUser: PrimaryTaskauths[index1].Escalated_to_User,
         EsDepartment: PrimaryTaskauths[index1].Escalated_to_Department,
-        ApproveBy: PrimaryTaskauths[index1].ApproveBy,
+        Approve_By: PrimaryTaskauths[index1].Approve_By,
       });
     }
   }
@@ -310,7 +311,7 @@ const Thursday = async () => {
         Date: MomentDate(),
         EsUser: PrimaryTaskauths[index1].Escalated_to_User,
         EsDepartment: PrimaryTaskauths[index1].Escalated_to_Department,
-        ApproveBy: PrimaryTaskauths[index1].ApproveBy,
+        Approve_By: PrimaryTaskauths[index1].Approve_By,
       });
     }
   }
@@ -369,14 +370,14 @@ const Friday = async () => {
         Date: MomentDate(),
         EsUser: PrimaryTaskauths[index1].Escalated_to_User,
         EsDepartment: PrimaryTaskauths[index1].Escalated_to_Department,
-        ApproveBy: PrimaryTaskauths[index1].ApproveBy,
+        Approve_By: PrimaryTaskauths[index1].Approve_By,
       });
     }
   }
   console.log("Data Inserted Friday");
 };
 
-// Daily();
+Daily();
 // Monday();
 // Tuesday();
 // Wednesday();
