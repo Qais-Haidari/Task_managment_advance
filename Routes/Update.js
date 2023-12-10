@@ -244,7 +244,7 @@ Router.post("/PrimaryTask/update/:id", (req, res) => {
       Monday: req.body.Monday,
       Thuesday: req.body.Thuesday,
       Wednesday: req.body.Wednesday,
-      Thudesday: req.body.Thuesday,
+      Thudesday: req.body.Thudesday,
       Friday: req.body.Friday,
       Saturday: req.body.Saturday,
       Sunday: req.body.Sunday,

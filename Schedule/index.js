@@ -379,7 +379,7 @@ const Friday = async () => {
 
 Daily();
 // Monday();
-// Tuesday();
+Tuesday();
 // Wednesday();
 // Thursday();
 // Friday();
