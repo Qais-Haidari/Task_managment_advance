@@ -267,8 +267,6 @@ Router.post("/PrimaryTask/update/:id", (req, res) => {
 });
 // Task Auth Update
 Router.post("/PrimaryTaskAuth/update/:id", (req, res) => {
-  // console.log(req.params.id);
-  // console.log(req.body);
   PrimaryTaskAuth.findOneAndUpdate(
     {
       ID: req.params.id,
@@ -279,6 +277,25 @@ Router.post("/PrimaryTaskAuth/update/:id", (req, res) => {
       MaxValue: req.body.Max,
       ExptectedValue: req.body.Expected,
       Questions: req.body.Question,
+    }
+  )
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+// UPDATE THE USER STATUS
+Router.post("/User/update/:id/:status", (req, res) => {
+  let statuss;
+  if (req.params.status === 'false') {
+    statuss = false;
+  }else {
+    statuss = true;
+  }
+  User.findOneAndUpdate(
+    {
+      ID: req.params.id,
+    },
+    {
+      Status: statuss,
     }
   )
     .then((r) => res.send(r))
@@ -300,6 +317,8 @@ Router.post("/CreateUser/update/:id", (req, res) => {
       Is_Admin: req.body.Is_Admin,
       Departments: req.body.Department,
       DepartmentsAdmin: req.body.DepartmentAdmin,
+      IC: req.body.IC,
+      Level: req.body.Level,
     }
   )
     .then((r) => res.send(r))

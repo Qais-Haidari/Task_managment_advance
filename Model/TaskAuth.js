@@ -96,6 +96,10 @@ let TaskAuth = new mongoose.Schema({
     type: String,
     required: false,
   },
+  Image_Hint: {
+    type: String,
+    required: false,
+  },
 });
 
 module.exports = TaskAuth = mongoose.model("taskauths", TaskAuth);

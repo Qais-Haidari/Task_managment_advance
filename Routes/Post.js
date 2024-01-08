@@ -26,6 +26,8 @@ Router.post("/createUser", (req, res) => {
     Is_Admin: req.body.Is_Admin,
     Departments: req.body.Department,
     DepartmentsAdmin: req.body.DepartmentsAdmin,
+    Level: req.body.Level,
+    IC: req.body.IC,
   });
 
   NewUser.save(function (err, result) {

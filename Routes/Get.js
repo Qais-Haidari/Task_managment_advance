@@ -10,6 +10,7 @@ const Department = require("../Model/Department");
 const TaskAuth = require("../Model/TaskAuth");
 const { v4: uuidv4 } = require("uuid");
 const moment = require("moment");
+const nodemailer = require("nodemailer");
 
 // GET ALL Users
 Router.get("/Users", (req, res) => {
@@ -133,6 +134,12 @@ Router.get("/Auth/:id", (req, res) => {
     .then((r) => res.send(r))
     .catch((err) => err);
 });
+// GET TASK ( MONITOR DASHBOARD )
+Router.get("/Auth/MD/:id", (req, res) => {
+  TaskAuth.find({ Task_ID: req.params.id })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
 // Get Task Auth by ID and Task ID
 Router.get("/Auth/:id/:task_ID", (req, res) => {
   TaskAuth.findOne({ Task_ID: req.params.Task_ID, ID: req.params.ID })
@@ -249,6 +256,33 @@ Router.get("/task/dashboard/AuthTask/new/:name", (req, res) => {
   })
     .then((r) => res.send(r))
     .catch((err) => err);
+});
+
+// SEND EMAIL TO USERS
+Router.get("/user/email/:pin/:email", (req, res) => {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.office365.com",
+    port: "587",
+    secureConnection: true,
+    tls: { ciphers: "SSLv3" },
+    auth: {
+      user: "CustomerService@unifresh.com.au",
+      pass: "Yourself1",
+    },
+  });
+  var mailOptions = {
+    from: "CustomerService@unifresh.com.au",
+    to: `${req.params.email}`,
+    subject: "Unifresh BOS Pin Code",
+    text: `Pin Code: ${req.params.pin}`,
+  };
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
 });
 // Get Task Auth by user and isAdminApprove
 Router.get("/task/dashboard/Department/:date/:time", (req, res) => {
@@ -462,6 +496,119 @@ Router.get(
       .catch((err) => err);
   }
 );
+
+
+
+// ----------------------------------------------- >
+// @ MONITOR DASHBOARD
+
+//ESCALATED TASKS
+Router.get("/task/dashboard/Monitor/:date/:time", (req, res) => {
+  var time = req.params.time;
+  var hours = Number(time.split(":")[0]);
+  var minutes = Number(time.split(":")[1].split(" ")[0]);
+  var AMPM = time.split(" ")[1];
+  if (AMPM == "PM" && hours < 12) hours = hours + 12;
+  if (AMPM == "AM" && hours == 12) hours = hours - 12;
+  var sHours = hours.toString();
+  var sMinutes = minutes.toString();
+  if (hours < 10) sHours = "0" + sHours;
+  if (minutes < 10) sMinutes = "0" + sMinutes;
+  const time_ = sHours + ":" + sMinutes;
+  Task.find({
+    Priority: { $nin: ['Low', 'Medium'] },
+    Task_Date: req.params.date,
+    end_time: { $lt: time_ },
+    is_task_done: false,
+  })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+
+// NOT ESCALATED TASKS
+Router.get("/task/dashboard/Monitor/notEST/:date/:time", (req, res) => {
+  var time = req.params.time;
+  var hours = Number(time.split(":")[0]);
+  var minutes = Number(time.split(":")[1].split(" ")[0]);
+  var AMPM = time.split(" ")[1];
+  if (AMPM == "PM" && hours < 12) hours = hours + 12;
+  if (AMPM == "AM" && hours == 12) hours = hours - 12;
+  var sHours = hours.toString();
+  var sMinutes = minutes.toString();
+  if (hours < 10) sHours = "0" + sHours;
+  if (minutes < 10) sMinutes = "0" + sMinutes;
+  const time_ = sHours + ":" + sMinutes;
+  Task.find({
+    Task_Date: req.params.date,
+    end_time: { $gt: time_ },
+    is_task_done: false,
+  })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+
+Router.get("/task/dashboard/Monitor/:user/:critical/:date/:time", (req, res) => {
+  var time = req.params.time;
+  var hours = Number(time.split(":")[0]);
+  var minutes = Number(time.split(":")[1].split(" ")[0]);
+  var AMPM = time.split(" ")[1];
+  if (AMPM == "PM" && hours < 12) hours = hours + 12;
+  if (AMPM == "AM" && hours == 12) hours = hours - 12;
+  var sHours = hours.toString();
+  var sMinutes = minutes.toString();
+  if (hours < 10) sHours = "0" + sHours;
+  if (minutes < 10) sMinutes = "0" + sMinutes;
+  const time_ = sHours + ":" + sMinutes;
+  Task.find({
+    Task_Date: req.params.date,
+    end_time: { $lt: time_ },
+    is_task_done: false,
+    Priority: req.params.critical,
+    Assign_to_User: req.params.user
+  })
+  .then((r) => res.send(r))
+  .catch((err) => err);
+});
+
+// NOT ESCALATED TASKS
+Router.get("/task/dashboard/Monitor/:user/:critical/notEST/:date/:time", (req, res) => {
+  console.log(req.params)
+  var time = req.params.time;
+  var hours = Number(time.split(":")[0]);
+  var minutes = Number(time.split(":")[1].split(" ")[0]);
+  var AMPM = time.split(" ")[1];
+  if (AMPM == "PM" && hours < 12) hours = hours + 12;
+  if (AMPM == "AM" && hours == 12) hours = hours - 12;
+  var sHours = hours.toString();
+  var sMinutes = minutes.toString();
+  if (hours < 10) sHours = "0" + sHours;
+  if (minutes < 10) sMinutes = "0" + sMinutes;
+  const time_ = sHours + ":" + sMinutes;
+  Task.find({
+    Task_Date: req.params.date,
+    end_time: { $gt: time_ },
+    is_task_done: false,
+    Priority: req.params.critical,
+    Assign_to_User: req.params.user
+  })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+
+
+// ________________________________________________
+// 2IC USERS ROUTES
+// GET User by ID
+Router.get("/User/2ic/:name", (req, res) => {
+  Users.findOne({ First_Name: req.params.name })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+});
+
+
+// ----------------------------------------------- >
+
+
 
 // /:name/:user/:tasks
 

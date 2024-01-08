@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 let User = new mongoose.Schema({
   Status: {
-    type: String,
+    type: Boolean,
     required: true,
-    default: "Active",
+    default: true,
   },
   ID: {
     type: Number,
@@ -45,6 +45,14 @@ let User = new mongoose.Schema({
   DepartmentsAdmin: {
     type: String,
     require: false,
+  },
+  IC: {
+    type: String,
+    require: false,
+  },
+  Level: {
+    type: Number,
+    require: true,
   },
 });
 
