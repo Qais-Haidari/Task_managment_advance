@@ -559,15 +559,29 @@ Router.get("/task/dashboard/Monitor/:user/:critical/:date/:time", (req, res) => 
   if (hours < 10) sHours = "0" + sHours;
   if (minutes < 10) sMinutes = "0" + sMinutes;
   const time_ = sHours + ":" + sMinutes;
-  Task.find({
-    Task_Date: req.params.date,
-    end_time: { $lt: time_ },
-    is_task_done: false,
-    Priority: req.params.critical,
-    Assign_to_User: req.params.user
-  })
-  .then((r) => res.send(r))
-  .catch((err) => err);
+
+  
+  if (req.params.critical == 'All') {
+    Task.find({
+      Task_Date: req.params.date,
+      end_time: { $lt: time_ },
+      is_task_done: false,
+      // Priority: {$all: ["Critical", "High"]},
+      Assign_to_User: req.params.user
+    })
+    .then((r) => res.send(r))
+    .catch((err) => err);  
+  }else {
+    Task.find({
+      Task_Date: req.params.date,
+      end_time: { $lt: time_ },
+      is_task_done: false,
+      Priority: req.params.critical,
+      Assign_to_User: req.params.user
+    })
+    .then((r) => res.send(r))
+    .catch((err) => err);
+  }
 });
 
 // NOT ESCALATED TASKS

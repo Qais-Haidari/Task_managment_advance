@@ -72,6 +72,25 @@ App.post(
   }
 );
 
+App.post(
+  "/image/Hint/:id/:taskID",
+  upload.single("file"),
+  function (req, res) {
+    TaskAuth.findOneAndUpdate(
+      { ID: req.params.id, Task_ID: req.params.taskid },
+      {
+        Image_Hint: req.body.Hint
+      }
+    )
+      .then((r) => console.log(""))
+      .catch((err) => res.send(err));
+    Task.findOneAndUpdate({ ID: req.params.taskid }, { Actioned: true })
+      .then((r) => {})
+      .catch((err) => res.send(err));
+    res.send("file uploaded");
+  }
+);
+
 // App.use(Express.static("build"));
 App.use(Express.static("./images"));
 

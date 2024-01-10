@@ -303,6 +303,7 @@ Router.post("/User/update/:id/:status", (req, res) => {
 });
 // Update User
 Router.post("/CreateUser/update/:id", (req, res) => {
+  console.log(req.body)
   User.findOneAndUpdate(
     {
       ID: req.params.id,
