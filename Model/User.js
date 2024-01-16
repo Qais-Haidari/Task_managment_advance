@@ -16,7 +16,7 @@ let User = new mongoose.Schema({
   },
   Last_Name: {
     type: String,
-    required: true,
+    required: false,
   },
   Email: {
     type: String,
