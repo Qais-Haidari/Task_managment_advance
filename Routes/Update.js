@@ -253,6 +253,7 @@ Router.post("/PrimaryTask/update/:id", (req, res) => {
       StartTime: req.body.StartTime,
       EndTime: req.body.EndTime,
       Approve_By: req.body.Approve_By,
+      Task_Recurrence_Date: req.body.Task_Recurrence_Date
     }
   )
     .then((r) => console.log("message"))

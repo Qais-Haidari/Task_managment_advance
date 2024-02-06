@@ -647,6 +647,17 @@ Router.post("/task/advancedasbhboard/TaskID/:name/:user", async (req, res) => {
 });
 
 // SCHEDULE -------------------------------------------------------------------------
+const transporter = nodemailer.createTransport({
+    host: "smtp.office365.com",
+    port: "587",
+    secureConnection: true,
+    tls: { ciphers: "SSLv3" },
+    auth: {
+      user: "customerservice@unifresh.com.au",
+      pass: "ypzgnwhfgqnrzcbm",
+    },
+  });
+
 function MomentDate() {
   let date = new Date();
   let Dates = moment(date).format("YYYY-MM-DD");
@@ -713,18 +724,31 @@ Router.get("/Daily/Schedule", (req, res) => {
     console.log("Data Inserted Daily");
     res.send("Success Daily");
   };
+  var mailOptions = {
+    from: "customerservice@unifresh.com.au",
+    to: `qais.kazimi@unifresh.com.au`,
+    subject: "When Deb Is Away Direct Debits",
+    text: `Daily Task Runs`,
+  };
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
   Daily();
 });
 
 Router.get("/Monday/Schedule", (req, res) => {
   const Monday = async () => {
-    const Daily_PrimaryTask = await PrimaryTask.find({
+    const Monday_PrimaryTask = await PrimaryTask.find({
       Task_Recurrence: "Weekly",
       Monday: true,
     });
-    Daily_PrimaryTask.length;
-    for (let index = 0; index < Daily_PrimaryTask.length; index++) {
-      const element = Daily_PrimaryTask[index];
+    // console.log(Monday_PrimaryTask.length)
+    for (let index = 0; index < Monday_PrimaryTask.length; index++) {
+      const element = Monday_PrimaryTask[index];
       let IDs = uuidv4();
       await Task.create({
         ID: IDs,
@@ -751,7 +775,6 @@ Router.get("/Monday/Schedule", (req, res) => {
         Sunday: element.Sunday,
         Task_Date: MomentDate(),
       });
-      // Daily_PrimaryTask.length
       let PrimaryTaskauths = [];
       PrimaryTaskauths = await PrimaryTaskAuth.find({
         Task_ID: element.ID,
@@ -777,6 +800,19 @@ Router.get("/Monday/Schedule", (req, res) => {
     console.log("Data Inserted Monday");
     res.send("Success Monday");
   };
+  var mailOptions = {
+    from: "customerservice@unifresh.com.au",
+    to: `qais.kazimi@unifresh.com.au`,
+    subject: "When Deb Is Away Direct Debits",
+    text: `Monday Task Runs`,
+  };
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
   Monday();
 });
 
@@ -838,9 +874,22 @@ Router.get("/Tuesday/Schedule", (req, res) => {
         });
       }
     }
-    console.log("Data Inserted Monday");
+    console.log("Data Inserted Tuesday");
     res.send("Success Thuesday");
   };
+  var mailOptions = {
+    from: "customerservice@unifresh.com.au",
+    to: `qais.kazimi@unifresh.com.au`,
+    subject: "When Deb Is Away Direct Debits",
+    text: `Tuesday Task Runs`,
+  };
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
   Thuesday();
 });
 
@@ -902,9 +951,22 @@ Router.get("/Wednesday/Schedule", (req, res) => {
         });
       }
     }
-    console.log("Data Inserted Monday");
+    console.log("Data Inserted Wednesday");
     res.send("Success Thuesday");
   };
+  var mailOptions = {
+    from: "customerservice@unifresh.com.au",
+    to: `qais.kazimi@unifresh.com.au`,
+    subject: "When Deb Is Away Direct Debits",
+    text: `Wednesday Task Runs`,
+  };
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
   Wednesday();
 });
 
@@ -966,13 +1028,26 @@ Router.get("/Thursday/Schedule", (req, res) => {
         });
       }
     }
-    console.log("Data Inserted Monday");
+    console.log("Data Inserted Thursday");
     res.send("Success Thursday");
   };
+  var mailOptions = {
+    from: "customerservice@unifresh.com.au",
+    to: `qais.kazimi@unifresh.com.au`,
+    subject: "When Deb Is Away Direct Debits",
+    text: `Thursday Task Runs`,
+  };
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
   Thursday();
 });
 
-Router.get("/Tuesday/Schedule", (req, res) => {
+Router.get("/Friday/Schedule", (req, res) => {
   const Friday = async () => {
     const Daily_PrimaryTask = await PrimaryTask.find({
       Task_Recurrence: "Weekly",
@@ -1030,9 +1105,99 @@ Router.get("/Tuesday/Schedule", (req, res) => {
         });
       }
     }
-    console.log("Data Inserted Monday");
+    console.log("Data Inserted Friday");
     res.send("Success Friday");
   };
+  var mailOptions = {
+    from: "customerservice@unifresh.com.au",
+    to: `qais.kazimi@unifresh.com.au`,
+    subject: "When Deb Is Away Direct Debits",
+    text: `Friday Task Runs`,
+  };
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
   Friday();
 });
+
+Router.get("/Monthly/Schedule", (req, res) => {
+  const Monthly = async () => {
+    const Daily_PrimaryTask = await PrimaryTask.find({
+      Task_Recurrence : 'Monthy',
+      Task_Recurrence_Date: `${MomentDate().split('-')[2]}`
+    });
+    for (let index = 0; index < Daily_PrimaryTask.length; index++) {
+      const element = Daily_PrimaryTask[index];
+      let IDs = uuidv4();
+      await Task.create({
+        ID: IDs,
+        Short_description: element.Short_description,
+        Summary: element.Summary,
+        Priority: element.Priority,
+        start_date_time: MomentDate(),
+        end_date_time: MomentDate(),
+        Task_Recurrence: element.Task_Recurrence,
+        Assign_to_User: element.Assign_to_User,
+        Assign_to_Department: element.Assign_to_Department,
+        Escalated_to_User: element.Escalated_to_User,
+        Escalated_to_Department: element.Escalated_to_Department,
+        Email_Notify: element.Email_Notify,
+        SMS_Notifiy: element.Email_SMS,
+        end_time: element.end_time,
+        start_time: element.start_time,
+        Monday: element.Monday,
+        Thuesday: element.Thuesday,
+        Wednesday: element.Wednesday,
+        Thudesday: element.Thudesday,
+        Friday: element.Friday,
+        Saturday: element.Saturday,
+        Sunday: element.Sunday,
+        Task_Date: MomentDate(),
+      });
+      // Daily_PrimaryTask.length
+      let PrimaryTaskauths = [];
+      PrimaryTaskauths = await PrimaryTaskAuth.find({
+        Task_ID: element.ID,
+      });
+      for (let index1 = 0; index1 < PrimaryTaskauths.length; index1++) {
+        await TaskAuth.create({
+          ID: uuidv4(),
+          Task_ID: IDs,
+          Type: PrimaryTaskauths[index1].Type,
+          MinValue: PrimaryTaskauths[index1].MinValue,
+          MaxValue: PrimaryTaskauths[index1].MaxValue,
+          ExptectedValue: PrimaryTaskauths[index1].ExptectedValue,
+          Questions: PrimaryTaskauths[index1].Questions,
+          User: PrimaryTaskauths[index1].Assign_to_User,
+          Department: PrimaryTaskauths[index1].Assign_to_Department,
+          Date: MomentDate(),
+          EsUser: PrimaryTaskauths[index1].Escalated_to_User,
+          EsDepartment: PrimaryTaskauths[index1].Escalated_to_Department,
+          Approve_By: PrimaryTaskauths[index1].Approve_By,
+        });
+      }
+    }
+    console.log("Data Inserted Monthy");
+    res.send("Success Friday");
+  };
+  var mailOptions = {
+    from: "customerservice@unifresh.com.au",
+    to: `qais.kazimi@unifresh.com.au`,
+    subject: "When Deb Is Away Direct Debits",
+    text: `Friday Task Runs`,
+  };
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
+  Monthly();
+});
+
 module.exports = Router;
