@@ -974,7 +974,7 @@ Router.get("/Thursday/Schedule", (req, res) => {
   const Thursday = async () => {
     const Daily_PrimaryTask = await PrimaryTask.find({
       Task_Recurrence: "Weekly",
-      Thursday: true,
+      Thudesday: true,
     });
     Daily_PrimaryTask.length;
     for (let index = 0; index < Daily_PrimaryTask.length; index++) {
