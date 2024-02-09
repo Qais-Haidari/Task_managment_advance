@@ -85,7 +85,10 @@ let PrimaryTask = new mongoose.Schema({
     type: String,
     required: false,
   },
-
+  Task_Recurrence_Month_On: {
+    type: String,
+    required: false,
+  },
   is_task_done: {
     type: Boolean,
     required: false,

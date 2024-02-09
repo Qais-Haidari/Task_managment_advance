@@ -147,7 +147,8 @@ Router.post("/createTask", async (req, res) => {
       Task_Date: req.body.Date,
       Approve_By: req.body.ApproveBy,
       Hint_Image: req.body.File,
-      Task_Recurrence_Date: req.body.Task_Recurrence_Date
+      Task_Recurrence_Date: req.body.Task_Recurrence_Date,
+      Task_Recurrence_Month_On: req.body.Task_Recurrence_Month_On
     });
     NewTask.save(function (err, result) {
       if (err) {
@@ -217,7 +218,8 @@ Router.post("/createTask", async (req, res) => {
       Saturday: req.body.Saturday,
       Sunday: req.body.Sunday,
       Task_Date: req.body.Date,
-      Task_Recurrence_Date: req.body.Task_Recurrence_Date
+      Task_Recurrence_Date: req.body.Task_Recurrence_Date,
+      Task_Recurrence_Month_On: req.body.Task_Recurrence_Month_On
     });
     PrimaryNewTask.save(function (err, result) {
       if (err) {
@@ -327,7 +329,8 @@ Router.post("/createTask", async (req, res) => {
       Sunday: req.body.Sunday,
       Task_Date: req.body.Date,
       Approve_By: req.body.ApproveBy,
-      Task_Recurrence_Date: req.body.Task_Recurrence_Date
+      Task_Recurrence_Date: req.body.Task_Recurrence_Date,
+      Task_Recurrence_Month_On: req.body.Task_Recurrence_Month_On
     });
     NewTask.save(function (err, result) {
       if (err) {
