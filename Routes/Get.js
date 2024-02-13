@@ -746,73 +746,81 @@ Router.get("/Monday/Schedule", (req, res) => {
       Task_Recurrence: "Weekly",
       Monday: true,
     });
-    // console.log(Monday_PrimaryTask.length)
+    // console.log(Monday_PrimaryTask)
+    
     for (let index = 0; index < Monday_PrimaryTask.length; index++) {
       const element = Monday_PrimaryTask[index];
-      let IDs = uuidv4();
-      await Task.create({
-        ID: IDs,
-        Short_description: element.Short_description,
-        Summary: element.Summary,
-        Priority: element.Priority,
-        start_date_time: MomentDate(),
-        end_date_time: MomentDate(),
-        Task_Recurrence: element.Task_Recurrence,
-        Assign_to_User: element.Assign_to_User,
-        Assign_to_Department: element.Assign_to_Department,
-        Escalated_to_User: element.Escalated_to_User,
-        Escalated_to_Department: element.Escalated_to_Department,
-        Email_Notify: element.Email_Notify,
-        SMS_Notifiy: element.Email_SMS,
-        end_time: element.end_time,
-        start_time: element.start_time,
-        Monday: element.Monday,
-        Thuesday: element.Thuesday,
-        Wednesday: element.Wednesday,
-        Thudesday: element.Thudesday,
-        Friday: element.Friday,
-        Saturday: element.Saturday,
-        Sunday: element.Sunday,
-        Task_Date: MomentDate(),
-      });
-      let PrimaryTaskauths = [];
-      PrimaryTaskauths = await PrimaryTaskAuth.find({
-        Task_ID: element.ID,
-      });
-      for (let index1 = 0; index1 < PrimaryTaskauths.length; index1++) {
-        await TaskAuth.create({
-          ID: uuidv4(),
-          Task_ID: IDs,
-          Type: PrimaryTaskauths[index1].Type,
-          MinValue: PrimaryTaskauths[index1].MinValue,
-          MaxValue: PrimaryTaskauths[index1].MaxValue,
-          ExptectedValue: PrimaryTaskauths[index1].ExptectedValue,
-          Questions: PrimaryTaskauths[index1].Questions,
-          User: PrimaryTaskauths[index1].Assign_to_User,
-          Department: PrimaryTaskauths[index1].Assign_to_Department,
-          Date: MomentDate(),
-          EsUser: PrimaryTaskauths[index1].Escalated_to_User,
-          EsDepartment: PrimaryTaskauths[index1].Escalated_to_Department,
-          Approve_By: PrimaryTaskauths[index1].Approve_By,
-        });
+      if (element.Assign_to_User === 'Chad' && element.Short_description === 'Check Shorts are compeleted ') {
+        console.log(element)
       }
     }
+
+    // for (let index = 0; index < Monday_PrimaryTask.length; index++) {
+    //   const element = Monday_PrimaryTask[index];
+    //   let IDs = uuidv4();
+    //   await Task.create({
+    //     ID: IDs,
+    //     Short_description: element.Short_description,
+    //     Summary: element.Summary,
+    //     Priority: element.Priority,
+    //     start_date_time: MomentDate(),
+    //     end_date_time: MomentDate(),
+    //     Task_Recurrence: element.Task_Recurrence,
+    //     Assign_to_User: element.Assign_to_User,
+    //     Assign_to_Department: element.Assign_to_Department,
+    //     Escalated_to_User: element.Escalated_to_User,
+    //     Escalated_to_Department: element.Escalated_to_Department,
+    //     Email_Notify: element.Email_Notify,
+    //     SMS_Notifiy: element.Email_SMS,
+    //     end_time: element.end_time,
+    //     start_time: element.start_time,
+    //     Monday: element.Monday,
+    //     Thuesday: element.Thuesday,
+    //     Wednesday: element.Wednesday,
+    //     Thudesday: element.Thudesday,
+    //     Friday: element.Friday,
+    //     Saturday: element.Saturday,
+    //     Sunday: element.Sunday,
+    //     Task_Date: MomentDate(),
+    //   });
+    //   let PrimaryTaskauths = [];
+    //   PrimaryTaskauths = await PrimaryTaskAuth.find({
+    //     Task_ID: element.ID,
+    //   });
+    //   for (let index1 = 0; index1 < PrimaryTaskauths.length; index1++) {
+    //     await TaskAuth.create({
+    //       ID: uuidv4(),
+    //       Task_ID: IDs,
+    //       Type: PrimaryTaskauths[index1].Type,
+    //       MinValue: PrimaryTaskauths[index1].MinValue,
+    //       MaxValue: PrimaryTaskauths[index1].MaxValue,
+    //       ExptectedValue: PrimaryTaskauths[index1].ExptectedValue,
+    //       Questions: PrimaryTaskauths[index1].Questions,
+    //       User: PrimaryTaskauths[index1].Assign_to_User,
+    //       Department: PrimaryTaskauths[index1].Assign_to_Department,
+    //       Date: MomentDate(),
+    //       EsUser: PrimaryTaskauths[index1].Escalated_to_User,
+    //       EsDepartment: PrimaryTaskauths[index1].Escalated_to_Department,
+    //       Approve_By: PrimaryTaskauths[index1].Approve_By,
+    //     });
+    //   }
+    // }
     console.log("Data Inserted Monday");
-    res.send("Success Monday");
+    res.json(Monday_PrimaryTask);
   };
-  var mailOptions = {
-    from: "customerservice@unifresh.com.au",
-    to: `qais.kazimi@unifresh.com.au`,
-    subject: "When Deb Is Away Direct Debits",
-    text: `Monday Task Runs`,
-  };
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Email sent: " + info.response);
-    }
-  });
+  // var mailOptions = {
+  //   from: "customerservice@unifresh.com.au",
+  //   to: `qais.kazimi@unifresh.com.au`,
+  //   subject: "When Deb Is Away Direct Debits",
+  //   text: `Monday Task Runs`,
+  // };
+  // transporter.sendMail(mailOptions, function (error, info) {
+  //   if (error) {
+  //     console.log(error);
+  //   } else {
+  //     console.log("Email sent: " + info.response);
+  //   }
+  // });
   Monday();
 });
 
