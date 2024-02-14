@@ -754,73 +754,72 @@ Router.get("/Monday/Schedule", (req, res) => {
         console.log(element)
       }
     }
-
-    // for (let index = 0; index < Monday_PrimaryTask.length; index++) {
-    //   const element = Monday_PrimaryTask[index];
-    //   let IDs = uuidv4();
-    //   await Task.create({
-    //     ID: IDs,
-    //     Short_description: element.Short_description,
-    //     Summary: element.Summary,
-    //     Priority: element.Priority,
-    //     start_date_time: MomentDate(),
-    //     end_date_time: MomentDate(),
-    //     Task_Recurrence: element.Task_Recurrence,
-    //     Assign_to_User: element.Assign_to_User,
-    //     Assign_to_Department: element.Assign_to_Department,
-    //     Escalated_to_User: element.Escalated_to_User,
-    //     Escalated_to_Department: element.Escalated_to_Department,
-    //     Email_Notify: element.Email_Notify,
-    //     SMS_Notifiy: element.Email_SMS,
-    //     end_time: element.end_time,
-    //     start_time: element.start_time,
-    //     Monday: element.Monday,
-    //     Thuesday: element.Thuesday,
-    //     Wednesday: element.Wednesday,
-    //     Thudesday: element.Thudesday,
-    //     Friday: element.Friday,
-    //     Saturday: element.Saturday,
-    //     Sunday: element.Sunday,
-    //     Task_Date: MomentDate(),
-    //   });
-    //   let PrimaryTaskauths = [];
-    //   PrimaryTaskauths = await PrimaryTaskAuth.find({
-    //     Task_ID: element.ID,
-    //   });
-    //   for (let index1 = 0; index1 < PrimaryTaskauths.length; index1++) {
-    //     await TaskAuth.create({
-    //       ID: uuidv4(),
-    //       Task_ID: IDs,
-    //       Type: PrimaryTaskauths[index1].Type,
-    //       MinValue: PrimaryTaskauths[index1].MinValue,
-    //       MaxValue: PrimaryTaskauths[index1].MaxValue,
-    //       ExptectedValue: PrimaryTaskauths[index1].ExptectedValue,
-    //       Questions: PrimaryTaskauths[index1].Questions,
-    //       User: PrimaryTaskauths[index1].Assign_to_User,
-    //       Department: PrimaryTaskauths[index1].Assign_to_Department,
-    //       Date: MomentDate(),
-    //       EsUser: PrimaryTaskauths[index1].Escalated_to_User,
-    //       EsDepartment: PrimaryTaskauths[index1].Escalated_to_Department,
-    //       Approve_By: PrimaryTaskauths[index1].Approve_By,
-    //     });
-    //   }
-    // }
+    for (let index = 0; index < Monday_PrimaryTask.length; index++) {
+      const element = Monday_PrimaryTask[index];
+      let IDs = uuidv4();
+      await Task.create({
+        ID: IDs,
+        Short_description: element.Short_description,
+        Summary: element.Summary,
+        Priority: element.Priority,
+        start_date_time: MomentDate(),
+        end_date_time: MomentDate(),
+        Task_Recurrence: element.Task_Recurrence,
+        Assign_to_User: element.Assign_to_User,
+        Assign_to_Department: element.Assign_to_Department,
+        Escalated_to_User: element.Escalated_to_User,
+        Escalated_to_Department: element.Escalated_to_Department,
+        Email_Notify: element.Email_Notify,
+        SMS_Notifiy: element.Email_SMS,
+        end_time: element.end_time,
+        start_time: element.start_time,
+        Monday: element.Monday,
+        Thuesday: element.Thuesday,
+        Wednesday: element.Wednesday,
+        Thudesday: element.Thudesday,
+        Friday: element.Friday,
+        Saturday: element.Saturday,
+        Sunday: element.Sunday,
+        Task_Date: MomentDate(),
+      });
+      let PrimaryTaskauths = [];
+      PrimaryTaskauths = await PrimaryTaskAuth.find({
+        Task_ID: element.ID,
+      });
+      for (let index1 = 0; index1 < PrimaryTaskauths.length; index1++) {
+        await TaskAuth.create({
+          ID: uuidv4(),
+          Task_ID: IDs,
+          Type: PrimaryTaskauths[index1].Type,
+          MinValue: PrimaryTaskauths[index1].MinValue,
+          MaxValue: PrimaryTaskauths[index1].MaxValue,
+          ExptectedValue: PrimaryTaskauths[index1].ExptectedValue,
+          Questions: PrimaryTaskauths[index1].Questions,
+          User: PrimaryTaskauths[index1].Assign_to_User,
+          Department: PrimaryTaskauths[index1].Assign_to_Department,
+          Date: MomentDate(),
+          EsUser: PrimaryTaskauths[index1].Escalated_to_User,
+          EsDepartment: PrimaryTaskauths[index1].Escalated_to_Department,
+          Approve_By: PrimaryTaskauths[index1].Approve_By,
+        });
+      }
+    }
     console.log("Data Inserted Monday");
     res.json(Monday_PrimaryTask);
   };
-  // var mailOptions = {
-  //   from: "customerservice@unifresh.com.au",
-  //   to: `qais.kazimi@unifresh.com.au`,
-  //   subject: "When Deb Is Away Direct Debits",
-  //   text: `Monday Task Runs`,
-  // };
-  // transporter.sendMail(mailOptions, function (error, info) {
-  //   if (error) {
-  //     console.log(error);
-  //   } else {
-  //     console.log("Email sent: " + info.response);
-  //   }
-  // });
+  var mailOptions = {
+    from: "customerservice@unifresh.com.au",
+    to: `qais.kazimi@unifresh.com.au`,
+    subject: "When Deb Is Away Direct Debits",
+    text: `Monday Task Runs`,
+  };
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
   Monday();
 });
 
@@ -1133,6 +1132,150 @@ Router.get("/Friday/Schedule", (req, res) => {
 });
 
 Router.get("/Monthly/Schedule", (req, res) => {
+  const Monthly = async () => {
+    const Daily_PrimaryTask = await PrimaryTask.find({
+      Task_Recurrence : 'Monthy',
+      Task_Recurrence_Date: `${MomentDate().split('-')[2]}`
+    });
+    for (let index = 0; index < Daily_PrimaryTask.length; index++) {
+      const element = Daily_PrimaryTask[index];
+      let IDs = uuidv4();
+      await Task.create({
+        ID: IDs,
+        Short_description: element.Short_description,
+        Summary: element.Summary,
+        Priority: element.Priority,
+        start_date_time: MomentDate(),
+        end_date_time: MomentDate(),
+        Task_Recurrence: element.Task_Recurrence,
+        Assign_to_User: element.Assign_to_User,
+        Assign_to_Department: element.Assign_to_Department,
+        Escalated_to_User: element.Escalated_to_User,
+        Escalated_to_Department: element.Escalated_to_Department,
+        Email_Notify: element.Email_Notify,
+        SMS_Notifiy: element.Email_SMS,
+        end_time: element.end_time,
+        start_time: element.start_time,
+        Monday: element.Monday,
+        Thuesday: element.Thuesday,
+        Wednesday: element.Wednesday,
+        Thudesday: element.Thudesday,
+        Friday: element.Friday,
+        Saturday: element.Saturday,
+        Sunday: element.Sunday,
+        Task_Date: MomentDate(),
+      });
+      // Daily_PrimaryTask.length
+      let PrimaryTaskauths = [];
+      PrimaryTaskauths = await PrimaryTaskAuth.find({
+        Task_ID: element.ID,
+      });
+      for (let index1 = 0; index1 < PrimaryTaskauths.length; index1++) {
+        await TaskAuth.create({
+          ID: uuidv4(),
+          Task_ID: IDs,
+          Type: PrimaryTaskauths[index1].Type,
+          MinValue: PrimaryTaskauths[index1].MinValue,
+          MaxValue: PrimaryTaskauths[index1].MaxValue,
+          ExptectedValue: PrimaryTaskauths[index1].ExptectedValue,
+          Questions: PrimaryTaskauths[index1].Questions,
+          User: PrimaryTaskauths[index1].Assign_to_User,
+          Department: PrimaryTaskauths[index1].Assign_to_Department,
+          Date: MomentDate(),
+          EsUser: PrimaryTaskauths[index1].Escalated_to_User,
+          EsDepartment: PrimaryTaskauths[index1].Escalated_to_Department,
+          Approve_By: PrimaryTaskauths[index1].Approve_By,
+        });
+      }
+    }
+    console.log("Data Inserted Monthy");
+    res.send("Success Friday");
+  };
+  var mailOptions = {
+    from: "customerservice@unifresh.com.au",
+    to: `qais.kazimi@unifresh.com.au`,
+    subject: "When Deb Is Away Direct Debits",
+    text: `Friday Task Runs`,
+  };
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
+  Monthly();
+});
+
+
+// Testing Recurrence
+Router.get("/Daily_test/Schedule", (req, res) => {
+  const Daily = async () => {
+    const Daily_PrimaryTask = await PrimaryTask.find({
+      Task_Recurrence: "Daily",
+    });
+    res.json(Daily_PrimaryTask);
+  }
+  Daily();
+});
+
+Router.get("/Monday_test/Schedule", (req, res) => {
+  const Monday = async () => {
+    const Monday_PrimaryTask = await PrimaryTask.find({
+      Task_Recurrence: "Weekly",
+      Monday: true,
+    });
+    res.json(Daily_PrimaryTask);
+  }
+  Monday();
+});
+
+Router.get("/Tuesday_test/Schedule", (req, res) => {
+  const Thuesday = async () => {
+    const Daily_PrimaryTask = await PrimaryTask.find({
+      Task_Recurrence: "Weekly",
+      Thuesday: true,
+    });
+    res.json(Daily_PrimaryTask);
+  }
+  Thuesday();
+});
+
+Router.get("/Wednesday_test/Schedule", (req, res) => {
+  const Wednesday = async () => {
+    const Daily_PrimaryTask = await PrimaryTask.find({
+      Task_Recurrence: "Weekly",
+      Wednesday: true,
+    });
+    res.json(Daily_PrimaryTask);
+  }
+  Wednesday();
+});
+
+Router.get("/Thursday_test/Schedule", (req, res) => {
+  const Thursday = async () => {
+    const Daily_PrimaryTask = await PrimaryTask.find({
+      Task_Recurrence: "Weekly",
+      Thudesday: true,
+    });
+    res.json(Daily_PrimaryTask);
+  };
+  
+  Thursday();
+});
+
+Router.get("/Friday_test/Schedule", (req, res) => {
+  const Friday = async () => {
+    const Daily_PrimaryTask = await PrimaryTask.find({
+      Task_Recurrence: "Weekly",
+      Friday: true,
+    });
+    res.json(Daily_PrimaryTask);
+  };
+  Friday();
+});
+
+Router.get("/Monthly_test/Schedule", (req, res) => {
   const Monthly = async () => {
     const Daily_PrimaryTask = await PrimaryTask.find({
       Task_Recurrence : 'Monthy',
