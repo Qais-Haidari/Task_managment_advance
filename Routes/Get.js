@@ -1210,50 +1210,50 @@ Router.get("/Monthly/Schedule", (req, res) => {
 
 // Testing Recurrence
 Router.get("/Daily_test/Schedule", (req, res) => {
-  const Daily = async () => {
+  const Daily_ = async () => {
     const Daily_PrimaryTask = await PrimaryTask.find({
       Task_Recurrence: "Daily",
     });
     res.json(Daily_PrimaryTask);
   }
-  Daily();
+  Daily_();
 });
 
 Router.get("/Monday_test/Schedule", (req, res) => {
-  const Monday = async () => {
+  const Monday_ = async () => {
     const Monday_PrimaryTask = await PrimaryTask.find({
       Task_Recurrence: "Weekly",
       Monday: true,
     });
     res.json(Daily_PrimaryTask);
   }
-  Monday();
+  Monday_();
 });
 
 Router.get("/Tuesday_test/Schedule", (req, res) => {
-  const Thuesday = async () => {
+  const Thuesday_ = async () => {
     const Daily_PrimaryTask = await PrimaryTask.find({
       Task_Recurrence: "Weekly",
       Thuesday: true,
     });
     res.json(Daily_PrimaryTask);
   }
-  Thuesday();
+  Thuesday_();
 });
 
 Router.get("/Wednesday_test/Schedule", (req, res) => {
-  const Wednesday = async () => {
+  const Wednesday_ = async () => {
     const Daily_PrimaryTask = await PrimaryTask.find({
       Task_Recurrence: "Weekly",
       Wednesday: true,
     });
     res.json(Daily_PrimaryTask);
   }
-  Wednesday();
+  Wednesday_();
 });
 
 Router.get("/Thursday_test/Schedule", (req, res) => {
-  const Thursday = async () => {
+  const Thursday_ = async () => {
     const Daily_PrimaryTask = await PrimaryTask.find({
       Task_Recurrence: "Weekly",
       Thudesday: true,
@@ -1261,18 +1261,18 @@ Router.get("/Thursday_test/Schedule", (req, res) => {
     res.json(Daily_PrimaryTask);
   };
   
-  Thursday();
+  Thursday_();
 });
 
 Router.get("/Friday_test/Schedule", (req, res) => {
-  const Friday = async () => {
+  const Friday_ = async () => {
     const Daily_PrimaryTask = await PrimaryTask.find({
       Task_Recurrence: "Weekly",
       Friday: true,
     });
     res.json(Daily_PrimaryTask);
   };
-  Friday();
+  Friday_();
 });
 
 Router.get("/Monthly_test/Schedule", (req, res) => {
