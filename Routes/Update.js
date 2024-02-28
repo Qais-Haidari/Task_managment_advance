@@ -268,9 +268,9 @@ Router.post("/PrimaryTask/update/:id", (req, res) => {
       Saturday: req.body.Saturday,
       Sunday: req.body.Sunday,
       StartDate: req.body.StartDate,
-      EndDate: EndTime,
+      EndDate: req.body.EndDate,
       StartTime: req.body.StartTime,
-      EndTime: req.body.EndTime,
+      EndTime: EndTime,
       Approve_By: req.body.Approve_By,
       Task_Recurrence_Date: req.body.Task_Recurrence_Date
     }
