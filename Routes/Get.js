@@ -136,6 +136,7 @@ Router.get("/Auth/:id", (req, res) => {
 });
 // GET TASK ( MONITOR DASHBOARD )
 Router.get("/Auth/MD/:id", (req, res) => {
+  console.log(req.params.id)
   TaskAuth.find({ Task_ID: req.params.id })
     .then((r) => res.send(r))
     .catch((err) => err);
@@ -566,7 +567,6 @@ Router.get("/task/dashboard/Monitor/:user/:critical/:date/:time", (req, res) => 
       Task_Date: req.params.date,
       end_time: { $lt: time_ },
       is_task_done: false,
-      // Priority: {$all: ["Critical", "High"]},
       Assign_to_User: req.params.user
     })
     .then((r) => res.send(r))
@@ -586,7 +586,6 @@ Router.get("/task/dashboard/Monitor/:user/:critical/:date/:time", (req, res) => 
 
 // NOT ESCALATED TASKS
 Router.get("/task/dashboard/Monitor/:user/:critical/notEST/:date/:time", (req, res) => {
-  console.log(req.params)
   var time = req.params.time;
   var hours = Number(time.split(":")[0]);
   var minutes = Number(time.split(":")[1].split(" ")[0]);
@@ -1225,7 +1224,7 @@ Router.get("/Monday_test/Schedule", (req, res) => {
       Task_Recurrence: "Weekly",
       Monday: true,
     });
-    res.json(Daily_PrimaryTask);
+    res.json(Monday_PrimaryTask);
   }
   Monday_();
 });

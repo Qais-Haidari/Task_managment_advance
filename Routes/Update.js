@@ -8,6 +8,7 @@ const Task = require("../Model/Tasks");
 const TaskAuth = require("../Model/TaskAuth");
 const PrimaryTasks = require("../Model/PrimaryTasks");
 const PrimaryTaskAuth = require("../Model/PrimaryTaskAuth");
+const moment = require('moment');
 
 // Update Task Auth Value
 Router.post("/AuthUpdateValue/:id/:taskid", (req, res) => {
@@ -224,6 +225,24 @@ Router.post("/createTask/update/:id", (req, res) => {
 // PRIMARY TASKS
 // Task Update
 Router.post("/PrimaryTask/update/:id", (req, res) => {
+  console.log(req.body.StartTime)
+  // console.log(req.body.TaskNumber)
+  // console.log(req.body.Tast_duration)
+    const AddNumber = req.body.TaskNumber;
+    const HourMins = req.body.Tast_duration;
+    var time = req.body.StartTime;
+    var hours = Number(time.split(":")[0]);
+    var minutes = Number(time.split(":")[1]);
+    let AMPM;
+    if (req.body.StartTime < '12') {
+      AMPM = 'AM'
+    }else {
+      AMPM = 'PM'
+    }
+    // var AMPM = req.body.start_date_time.split(" ")[2];
+    let EndTime = moment(hours + ":" + minutes + " " + AMPM, ["h:mm A"])
+      .add(AddNumber, HourMins)
+      .format("HH:mm");
   PrimaryTasks.findOneAndUpdate(
     {
       ID: req.params.id,
@@ -249,7 +268,7 @@ Router.post("/PrimaryTask/update/:id", (req, res) => {
       Saturday: req.body.Saturday,
       Sunday: req.body.Sunday,
       StartDate: req.body.StartDate,
-      EndDate: req.body.EndDate,
+      EndDate: EndTime,
       StartTime: req.body.StartTime,
       EndTime: req.body.EndTime,
       Approve_By: req.body.Approve_By,
