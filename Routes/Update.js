@@ -69,6 +69,19 @@ Router.post("/AuthUpdateFeedback/:id/:taskid", (req, res) => {
     .catch((err) => res.send(err));
 });
 
+// UPDATE THE TASK WHEN ITS ON APPROVE BY NO ONE.
+Router.post("/Update/Task/NoOne/:id", async (req, res) => {
+  Task.findOneAndUpdate(
+    { ID: req.params.id },
+    {
+      is_task_done: true
+    }
+  )
+    .then((r) => {res.send('as')})
+    .catch((err) => res.send(err));
+});
+
+
 // Approve Task
 Router.post("/AuthUpdateApprove/:id/:taskid", async (req, res) => {
   const count = await TaskAuth.find({
@@ -222,10 +235,9 @@ Router.post("/createTask/update/:id", (req, res) => {
     .catch((err) => err);
 });
 
-// PRIMARY TASKS
+// PRIMARY TASK
 // Task Update
 Router.post("/PrimaryTask/update/:id", (req, res) => {
-  console.log(req.body.StartTime)
   // console.log(req.body.TaskNumber)
   // console.log(req.body.Tast_duration)
     const AddNumber = req.body.TaskNumber;
@@ -243,6 +255,7 @@ Router.post("/PrimaryTask/update/:id", (req, res) => {
     let EndTime = moment(hours + ":" + minutes + " " + AMPM, ["h:mm A"])
       .add(AddNumber, HourMins)
       .format("HH:mm");
+      console.log(EndTime)
   PrimaryTasks.findOneAndUpdate(
     {
       ID: req.params.id,
@@ -270,7 +283,7 @@ Router.post("/PrimaryTask/update/:id", (req, res) => {
       StartDate: req.body.StartDate,
       EndDate: req.body.EndDate,
       StartTime: req.body.StartTime,
-      EndTime: EndTime,
+      end_time: EndTime,
       Approve_By: req.body.Approve_By,
       Task_Recurrence_Date: req.body.Task_Recurrence_Date
     }

@@ -137,7 +137,7 @@ Router.get("/Auth/:id", (req, res) => {
 // GET TASK ( MONITOR DASHBOARD )
 Router.get("/Auth/MD/:id", (req, res) => {
   console.log(req.params.id)
-  TaskAuth.find({ Task_ID: req.params.id })
+  TaskAuth.find({ Task_ID: req.params.id, Approve_By: { $ne: 'No One' } })
     .then((r) => res.send(r))
     .catch((err) => err);
 });
