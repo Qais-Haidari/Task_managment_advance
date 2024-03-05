@@ -186,7 +186,7 @@ Router.get("/RDATA/:a", async (req, res) => {
       const element = oneDate[index];
       let data = await TaskAuth.find({
         Task_ID: element.ID,
-        // isAdminApproved: "Yes",
+        isAdminApproved: "Yes",
       });
       FormReport[index] = [element, { data }];
     }

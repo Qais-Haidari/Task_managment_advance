@@ -15,6 +15,7 @@ function Tuesday(){axios.get('http://10.0.0.116:5000/Tuesday/Schedule').then((re
 function Wednesday(){axios.get('http://10.0.0.116:5000/Wednesday/Schedule').then((res) => {}).catch((err) => {})}
 function Thursday(){axios.get('http://10.0.0.116:5000/Thursday/Schedule').then((res) => {}).catch((err) => {})}
 function Friday(){axios.get('http://10.0.0.116:5000/Friday/Schedule').then((res) => {}).catch((err) => {})}
+function Monthly(){axios.get('http://10.0.0.116:5000/Monthly/Schedule').then((res) => {}).catch((err) => {})}
 
 // 0 Monday
 // 1 Tuesday
@@ -29,19 +30,23 @@ function Run(){
     switch (today) {
         case 1:
             Monday();
+            Monthly();
             break;
         case 2:
             Tuesday();
+            Monthly();
             break;
         case 3:
             Wednesday();
+            Monthly();
             break;
         case 4:
             Thursday();
+            Monthly();
             break;
         case 5:
-            console.log('5')
-            // Friday();
+            Friday();
+            Monthly();
             break;
         default:
             return 'NON'
