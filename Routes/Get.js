@@ -186,7 +186,7 @@ Router.get("/RDATA/:a", async (req, res) => {
       const element = oneDate[index];
       let data = await TaskAuth.find({
         Task_ID: element.ID,
-        isAdminApproved: "Yes",
+        // isAdminApproved: "Yes",
       });
       FormReport[index] = [element, { data }];
     }
@@ -617,12 +617,7 @@ Router.get("/User/2ic/:name", (req, res) => {
     .then((r) => res.send(r))
     .catch((err) => err);
 });
-
-
 // ----------------------------------------------- >
-
-
-
 // /:name/:user/:tasks
 
 Router.post("/task/advancedasbhboard/TaskID/:name/:user", async (req, res) => {
@@ -1131,11 +1126,62 @@ Router.get("/Friday/Schedule", (req, res) => {
 });
 
 Router.get("/Monthly/Schedule", (req, res) => {
+  
+  function getCurrentWeekAndDay() {
+    const currentDate = new Date();
+    const currentDay = currentDate.getDate();
+    const currentWeek = Math.ceil(currentDay / 7);
+    const currentDayOfWeek = currentDate.getDay();
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return {
+        week: currentWeek,
+        dayOfWeek: currentDayOfWeek,
+        dayName: dayNames[currentDayOfWeek]
+    };
+  }
+  const currentInfo = getCurrentWeekAndDay();
   const Monthly = async () => {
-    const Daily_PrimaryTask = await PrimaryTask.find({
-      Task_Recurrence : 'Monthy',
-      Task_Recurrence_Date: `${MomentDate().split('-')[2]}`
-    });
+    let Daily_PrimaryTask;
+  switch (currentInfo.dayOfWeek) {
+    case 1:
+        Daily_PrimaryTask = await PrimaryTask.find({
+          Task_Recurrence: 'Monthy',
+          Task_Recurrence_Month_On: `${currentInfo.week}`,
+          Monday: true
+        });
+        break;
+    case 2:
+        Daily_PrimaryTask = await PrimaryTask.find({
+          Task_Recurrence: 'Monthy',
+          Task_Recurrence_Month_On: `${currentInfo.week}`,
+          Thuesday: true
+        });
+        break;
+    case 3:
+        Daily_PrimaryTask = await PrimaryTask.find({
+          Task_Recurrence: 'Monthy',
+          Task_Recurrence_Month_On: `${currentInfo.week}`,
+          Wednesday: true
+        });
+        break;
+    case 4:
+        Daily_PrimaryTask = await PrimaryTask.find({
+          Task_Recurrence: 'Monthy',
+          Task_Recurrence_Month_On: `${currentInfo.week}`,
+          Thudesday: true
+        });
+        break;
+    case 5:
+      Daily_PrimaryTask = await PrimaryTask.find({
+        Task_Recurrence: 'Monthy',
+        Task_Recurrence_Month_On: `${currentInfo.week}`,
+        Friday: true
+      });
+        break;
+    default:
+      console.log('default')
+        return 'NON'
+}
     for (let index = 0; index < Daily_PrimaryTask.length; index++) {
       const element = Daily_PrimaryTask[index];
       let IDs = uuidv4();
@@ -1188,24 +1234,10 @@ Router.get("/Monthly/Schedule", (req, res) => {
       }
     }
     console.log("Data Inserted Monthy");
-    res.send("Success Friday");
+    res.send("Success Monthly");
   };
-  var mailOptions = {
-    from: "customerservice@unifresh.com.au",
-    to: `qais.kazimi@unifresh.com.au`,
-    subject: "When Deb Is Away Direct Debits",
-    text: `Friday Task Runs`,
-  };
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Email sent: " + info.response);
-    }
-  });
   Monthly();
 });
-
 
 // Testing Recurrence
 Router.get("/Daily_test/Schedule", (req, res) => {
