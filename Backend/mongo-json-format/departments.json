@@ -1,0 +1,11 @@
+[
+{"_id":{"$oid":"64fe979e2030dfa467f0ed75"},"ID":291,"Department_ID":495,"Department_Name":"Distribution-Delivery","Email":"Distribution@unifresh.com.au","Start_of_Business":"04:00","End_of_Business":"23:59","__v":0},
+{"_id":{"$oid":"6508c38dc056d3de2dc75151"},"ID":6,"Department_ID":700,"Department_Name":"Office","Email":"office@unifresh.com au ","Start_of_Business":"08:00","End_of_Business":"17:00","__v":0},
+{"_id":{"$oid":"6512310fc056d3de2dc75a11"},"ID":714,"Department_ID":661,"Department_Name":"Purchasing","Email":"Purchasing@unifresh.com.au","Start_of_Business":"05:00","End_of_Business":"18:46","__v":0},
+{"_id":{"$oid":"65a5d27c3022c68dc586ff54"},"ID":837,"Department_ID":32,"Department_Name":"Operations","Email":"operations@unifresh.com.au","Start_of_Business":"04:00","End_of_Business":"23:59","__v":0},
+{"_id":{"$oid":"65a5d2d33022c68dc586ff5d"},"ID":932,"Department_ID":533,"Department_Name":"Production","Email":"Production@unifresh.com.au","Start_of_Business":"04:00","End_of_Business":"23:59","__v":0},
+{"_id":{"$oid":"65a5d2fe3022c68dc586ff60"},"ID":970,"Department_ID":99,"Department_Name":"Quality","Email":"Quality@unifresh.com.au","Start_of_Business":"04:00","End_of_Business":"23:59","__v":0},
+{"_id":{"$oid":"65a5d3233022c68dc586ff63"},"ID":700,"Department_ID":783,"Department_Name":"Maintenance","Email":"Maintenance@unifresh.com.au","Start_of_Business":"04:00","End_of_Business":"23:59","__v":0},
+{"_id":{"$oid":"65a5d34c3022c68dc586ff66"},"ID":806,"Department_ID":364,"Department_Name":"Cleaning","Email":"Cleaning@unifresh.com.au","Start_of_Business":"00:01","End_of_Business":"23:59","__v":0},
+{"_id":{"$oid":"65a5d64e3022c68dc586ffdc"},"ID":617,"Department_ID":981,"Department_Name":"Distribution-Picking","Email":"distribution@unifresh.com.au","Start_of_Business":"04:00","End_of_Business":"23:59","__v":0}
+]

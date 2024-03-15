@@ -1,0 +1,67 @@
+version: '3'
+
+services: 
+
+  backend:
+    build: 
+      context: Backend
+    container_name: backend
+    working_dir: /usr/src/app
+    networks: 
+      - node-network
+    volumes: 
+      - ./Backend:/usr/src/app
+      - /usr/src/app/node_modules
+    tty: true
+    ports: 
+      - "3000:3000"
+    command: npm run start
+
+  frontend:
+    build: 
+      context: Frontend
+    container_name: frontend
+    working_dir: /usr/src/app
+    networks: 
+      - node-network
+    volumes: 
+      - ./Frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    tty: true
+    ports: 
+      - "5000:5000"
+    command: npm run dev
+
+  mongod:
+    image: mongo:4.1.13
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: test
+      MONGO_INITDB_ROOT_PASSWORD: test
+    deploy:
+      replicas: 1
+    volumes:
+      - /root/data/mongod:/root/data
+      - /root/logs/mongod:/root/logs
+      - ./mongod.conf:/etc/mongod.conf
+    entrypoint: ["mongod","--config","/etc/mongod.conf"]
+    ports:
+      - 27017:27017
+      
+  nginx:
+    build: 
+      context: nginx
+    container_name: nginx
+    restart: always
+    tty: true
+    ports: 
+      - "8000:80"
+    networks: 
+      - node-network
+    depends_on:
+       - backend
+       - frontend
+  
+networks: 
+  node-network:
+    driver: bridge
